@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="5" failures="2" hostname="johnsdev" name="balsa.file.BorderControllerSpec" tests="7" time="2.537" timestamp="2019-09-27T22:26:00">
+  <properties />
+  <testcase classname="balsa.file.BorderControllerSpec" name="Test the index action returns the correct model" time="2.16">
+    <error type="java.lang.NullPointerException">java.lang.NullPointerException
+	at org.grails.datastore.mapping.query.Query.resolvePropertyValue(Query.java:268)
+	at org.grails.datastore.mapping.query.Query.addToJunction(Query.java:636)
+	at org.grails.datastore.mapping.query.Query.add(Query.java:141)
+	at org.grails.datastore.mapping.query.Query.add(Query.java:131)
+	at grails.gorm.CriteriaBuilder.addToCriteria(CriteriaBuilder.java:1141)
+	at grails.gorm.CriteriaBuilder.eq(CriteriaBuilder.java:459)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.file.FileController.tt__index_closure8_closure9(FileController.groovy:21)
+	at balsa.file.FileController.tt__index_closure8_closure9(FileController.groovy)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at groovy.lang.Closure.call(Closure.java:423)
+	at groovy.lang.Closure.call(Closure.java:417)
+	at grails.gorm.CriteriaBuilder.invokeClosureNode(CriteriaBuilder.java:1104)
+	at grails.gorm.CriteriaBuilder.invokeMethod(CriteriaBuilder.java:366)
+	at balsa.file.FileController.$tt__index_closure8(FileController.groovy:20)
+	at balsa.file.FileController.$tt__index_closure8(FileController.groovy)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at groovy.lang.Closure.call(Closure.java:423)
+	at groovy.lang.Closure.call(Closure.java:417)
+	at grails.gorm.CriteriaBuilder.invokeClosureNode(CriteriaBuilder.java:1104)
+	at grails.gorm.CriteriaBuilder.list(CriteriaBuilder.java:288)
+	at grails.gorm.CriteriaBuilder.list(CriteriaBuilder.java:52)
+	at balsa.file.FileController.$tt__index(FileController.groovy:18)
+	at balsa.file.FileController.index_closure1(FileController.groovy)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at groovy.lang.Closure.call(Closure.java:423)
+	at groovy.lang.Closure.call(Closure.java:439)
+	at org.codehaus.groovy.grails.orm.support.GrailsTransactionTemplate$2.doInTransaction(GrailsTransactionTemplate.groovy:88)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:133)
+	at org.codehaus.groovy.grails.orm.support.GrailsTransactionTemplate.execute(GrailsTransactionTemplate.groovy:85)
+	at balsa.file.BorderControllerSpec.Test the index action returns the correct model(BorderControllerSpec.groovy:18)
+</error>
+  </testcase>
+  <testcase classname="balsa.file.BorderControllerSpec" name="Test the create action returns the correct model" time="0.039">
+    <error message="No signature of method: balsa.file.BorderController.create() is applicable for argument types: () values: []&#xa;Possible solutions: update(), update(balsa.file.FileMetadata), grep(), chain(java.util.Map), raw(java.lang.Object), render(groovy.lang.Closure)" type="groovy.lang.MissingMethodException">groovy.lang.MissingMethodException: No signature of method: balsa.file.BorderController.create() is applicable for argument types: () values: []
+Possible solutions: update(), update(balsa.file.FileMetadata), grep(), chain(java.util.Map), raw(java.lang.Object), render(groovy.lang.Closure)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.file.BorderControllerSpec.Test the create action returns the correct model(BorderControllerSpec.groovy:27)
+</error>
+  </testcase>
+  <testcase classname="balsa.file.BorderControllerSpec" name="Test the save action correctly persists an instance" time="0.048">
+    <error message="No signature of method: balsa.file.BorderController.save() is applicable for argument types: (balsa.file.Border) values: [balsa.file.Border : (unsaved)]&#xa;Possible solutions: wait(), show(), any(), wait(long), raw(java.lang.Object), show(balsa.file.FileMetadata)" type="groovy.lang.MissingMethodException">groovy.lang.MissingMethodException: No signature of method: balsa.file.BorderController.save() is applicable for argument types: (balsa.file.Border) values: [balsa.file.Border : (unsaved)]
+Possible solutions: wait(), show(), any(), wait(long), raw(java.lang.Object), show(balsa.file.FileMetadata)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.file.BorderControllerSpec.Test the save action correctly persists an instance(BorderControllerSpec.groovy:40)
+</error>
+  </testcase>
+  <testcase classname="balsa.file.BorderControllerSpec" name="Test that the show action returns the correct model" time="0.074">
+    <failure message="Condition not satisfied:&#xa;&#xa;model.borderInstance == border&#xa;|     |              |  |&#xa;|     null           |  balsa.file.Border : (unsaved)&#xa;|                    false&#xa;[file:balsa.file.Border : (unsaved)]&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Condition not satisfied:
+
+model.borderInstance == border
+|     |              |  |
+|     null           |  balsa.file.Border : (unsaved)
+|                    false
+[file:balsa.file.Border : (unsaved)]
+
+	at balsa.file.BorderControllerSpec.Test that the show action returns the correct model(BorderControllerSpec.groovy:72)
+</failure>
+  </testcase>
+  <testcase classname="balsa.file.BorderControllerSpec" name="Test that the edit action returns the correct model" time="0.098">
+    <error message="Method on class [balsa.tagging.TagCategory] was used outside of a Grails application. If running in the context of a test using the mocking API or bootstrap Grails correctly." type="java.lang.IllegalStateException">java.lang.IllegalStateException: Method on class [balsa.tagging.TagCategory] was used outside of a Grails application. If running in the context of a test using the mocking API or bootstrap Grails correctly.
+	at balsa.file.FileController.$tt__edit(FileController.groovy:56)
+	at balsa.file.FileController.edit_closure4(FileController.groovy)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at groovy.lang.Closure.call(Closure.java:423)
+	at groovy.lang.Closure.call(Closure.java:439)
+	at org.codehaus.groovy.grails.orm.support.GrailsTransactionTemplate$2.doInTransaction(GrailsTransactionTemplate.groovy:88)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:133)
+	at org.codehaus.groovy.grails.orm.support.GrailsTransactionTemplate.execute(GrailsTransactionTemplate.groovy:85)
+	at balsa.file.BorderControllerSpec.Test that the edit action returns the correct model(BorderControllerSpec.groovy:85)
+</error>
+  </testcase>
+  <testcase classname="balsa.file.BorderControllerSpec" name="Test the update action performs an update on a valid domain instance" time="0.06">
+    <failure message="Condition not satisfied:&#xa;&#xa;response.redirectedUrl == &apos;/border/index&apos;&#xa;|        |             |&#xa;|        null          false&#xa;org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@724e483f&#xa;" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: Condition not satisfied:
+
+response.redirectedUrl == &apos;/border/index&apos;
+|        |             |
+|        null          false
+org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@724e483f
+
+	at balsa.file.BorderControllerSpec.Test the update action performs an update on a valid domain instance(BorderControllerSpec.groovy:98)
+</failure>
+  </testcase>
+  <testcase classname="balsa.file.BorderControllerSpec" name="Test that the delete action deletes an instance if it exists" time="0.032">
+    <error message="No signature of method: balsa.file.BorderController.delete() is applicable for argument types: (null) values: [null]&#xa;Possible solutions: edit(), update(), every(), edit(balsa.file.FileMetadata), sleep(long), update(balsa.file.FileMetadata)" type="groovy.lang.MissingMethodException">groovy.lang.MissingMethodException: No signature of method: balsa.file.BorderController.delete() is applicable for argument types: (null) values: [null]
+Possible solutions: edit(), update(), every(), edit(balsa.file.FileMetadata), sleep(long), update(balsa.file.FileMetadata)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.file.BorderControllerSpec.Test that the delete action deletes an instance if it exists(BorderControllerSpec.groovy:127)
+</error>
+  </testcase>
+  <system-out><![CDATA[--Output from Test the index action returns the correct model--
+--Output from Test the create action returns the correct model--
+--Output from Test the save action correctly persists an instance--
+--Output from Test that the show action returns the correct model--
+--Output from Test that the edit action returns the correct model--
+--Output from Test the update action performs an update on a valid domain instance--
+--Output from Test that the delete action deletes an instance if it exists--
+]]></system-out>
+  <system-err><![CDATA[--Output from Test the index action returns the correct model--
+--Output from Test the create action returns the correct model--
+--Output from Test the save action correctly persists an instance--
+--Output from Test that the show action returns the correct model--
+--Output from Test that the edit action returns the correct model--
+--Output from Test the update action performs an update on a valid domain instance--
+--Output from Test that the delete action deletes an instance if it exists--
+]]></system-err>
+</testsuite>

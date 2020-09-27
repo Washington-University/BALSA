@@ -1,0 +1,113 @@
+Testsuite: balsa.DataAccessTermsControllerSpec
+Tests run: 7, Failures: 3, Errors: 4, Time elapsed: 8.485 sec
+------------- Standard Output ---------------
+--Output from Test the index action returns the correct model--
+--Output from Test the create action returns the correct model--
+--Output from Test the save action correctly persists an instance--
+--Output from Test that the show action returns the correct model--
+--Output from Test that the edit action returns the correct model--
+--Output from Test the update action performs an update on a valid domain instance--
+--Output from Test that the delete action deletes an instance if it exists--
+------------- ---------------- ---------------
+------------- Standard Error -----------------
+--Output from Test the index action returns the correct model--
+--Output from Test the create action returns the correct model--
+--Output from Test the save action correctly persists an instance--
+--Output from Test that the show action returns the correct model--
+--Output from Test that the edit action returns the correct model--
+--Output from Test the update action performs an update on a valid domain instance--
+--Output from Test that the delete action deletes an instance if it exists--
+------------- ---------------- ---------------
+
+Testcase: Test the index action returns the correct model took 7.51 sec
+	Caused an ERROR
+No signature of method: balsa.security.TermsController.index() is applicable for argument types: () values: []
+Possible solutions: mine(), find(), render(groovy.lang.Closure), render(java.lang.CharSequence), render(java.lang.Object), render(java.lang.String)
+groovy.lang.MissingMethodException: No signature of method: balsa.security.TermsController.index() is applicable for argument types: () values: []
+Possible solutions: mine(), find(), render(groovy.lang.Closure), render(java.lang.CharSequence), render(java.lang.Object), render(java.lang.String)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.DataAccessTermsControllerSpec.Test the index action returns the correct model(DataAccessTermsControllerSpec.groovy:22)
+
+Testcase: Test the create action returns the correct model took 0.363 sec
+	FAILED
+Condition not satisfied:
+
+model.dataAccessTermsInstance!= null
+|     |                      |
+[:]   null                   false
+
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+model.dataAccessTermsInstance!= null
+|     |                      |
+[:]   null                   false
+
+	at balsa.DataAccessTermsControllerSpec.Test the create action returns the correct model(DataAccessTermsControllerSpec.groovy:34)
+
+Testcase: Test the save action correctly persists an instance took 0.233 sec
+	FAILED
+Condition not satisfied:
+
+model.dataAccessTermsInstance!= null
+|     |                      |
+|     null                   false
+[termsInstance:balsa.security.Terms : (unsaved)]
+
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+model.dataAccessTermsInstance!= null
+|     |                      |
+|     null                   false
+[termsInstance:balsa.security.Terms : (unsaved)]
+
+	at balsa.DataAccessTermsControllerSpec.Test the save action correctly persists an instance(DataAccessTermsControllerSpec.groovy:47)
+
+Testcase: Test that the show action returns the correct model took 0.082 sec
+	FAILED
+Condition not satisfied:
+
+model.dataAccessTermsInstance == dataAccessTerms
+|     |                       |  |
+[:]   null                    |  balsa.security.Terms : (unsaved)
+                              false
+
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+model.dataAccessTermsInstance == dataAccessTerms
+|     |                       |  |
+[:]   null                    |  balsa.security.Terms : (unsaved)
+                              false
+
+	at balsa.DataAccessTermsControllerSpec.Test that the show action returns the correct model(DataAccessTermsControllerSpec.groovy:76)
+
+Testcase: Test that the edit action returns the correct model took 0.023 sec
+	Caused an ERROR
+No signature of method: balsa.security.TermsController.edit() is applicable for argument types: (null) values: [null]
+Possible solutions: wait(), wait(long), wait(long, int), with(groovy.lang.Closure), print(java.io.PrintWriter), each(groovy.lang.Closure)
+groovy.lang.MissingMethodException: No signature of method: balsa.security.TermsController.edit() is applicable for argument types: (null) values: [null]
+Possible solutions: wait(), wait(long), wait(long, int), with(groovy.lang.Closure), print(java.io.PrintWriter), each(groovy.lang.Closure)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.DataAccessTermsControllerSpec.Test that the edit action returns the correct model(DataAccessTermsControllerSpec.groovy:81)
+
+Testcase: Test the update action performs an update on a valid domain instance took 0.029 sec
+	Caused an ERROR
+No signature of method: balsa.security.TermsController.update() is applicable for argument types: (null) values: [null]
+Possible solutions: create(), save(), save(balsa.security.Terms), isCase(java.lang.Object), putAt(java.lang.String, java.lang.Object), split(groovy.lang.Closure)
+groovy.lang.MissingMethodException: No signature of method: balsa.security.TermsController.update() is applicable for argument types: (null) values: [null]
+Possible solutions: create(), save(), save(balsa.security.Terms), isCase(java.lang.Object), putAt(java.lang.String, java.lang.Object), split(groovy.lang.Closure)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.DataAccessTermsControllerSpec.Test the update action performs an update on a valid domain instance(DataAccessTermsControllerSpec.groovy:99)
+
+Testcase: Test that the delete action deletes an instance if it exists took 0.021 sec
+	Caused an ERROR
+No signature of method: balsa.security.TermsController.delete() is applicable for argument types: (null) values: [null]
+Possible solutions: agree(), create(), every(), sleep(long), agree(balsa.security.Terms), every(groovy.lang.Closure)
+groovy.lang.MissingMethodException: No signature of method: balsa.security.TermsController.delete() is applicable for argument types: (null) values: [null]
+Possible solutions: agree(), create(), every(), sleep(long), agree(balsa.security.Terms), every(groovy.lang.Closure)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.DataAccessTermsControllerSpec.Test that the delete action deletes an instance if it exists(DataAccessTermsControllerSpec.groovy:131)
+

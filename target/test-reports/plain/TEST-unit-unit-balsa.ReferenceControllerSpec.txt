@@ -1,0 +1,130 @@
+Testsuite: balsa.ReferenceControllerSpec
+Tests run: 7, Failures: 4, Errors: 3, Time elapsed: 1.032 sec
+------------- Standard Output ---------------
+--Output from Test the index action returns the correct model--
+--Output from Test the create action returns the correct model--
+--Output from Test the save action correctly persists an instance--
+--Output from Test that the show action returns the correct model--
+--Output from Test that the edit action returns the correct model--
+--Output from Test the update action performs an update on a valid domain instance--
+--Output from Test that the delete action deletes an instance if it exists--
+------------- ---------------- ---------------
+------------- Standard Error -----------------
+--Output from Test the index action returns the correct model--
+--Output from Test the create action returns the correct model--
+--Output from Test the save action correctly persists an instance--
+--Output from Test that the show action returns the correct model--
+--Output from Test that the edit action returns the correct model--
+--Output from Test the update action performs an update on a valid domain instance--
+--Output from Test that the delete action deletes an instance if it exists--
+------------- ---------------- ---------------
+
+Testcase: Test the index action returns the correct model took 0.684 sec
+	Caused an ERROR
+null
+java.lang.NullPointerException
+	at grails.plugin.springsecurity.SpringSecurityUtils.getBean(SpringSecurityUtils.java:762)
+	at grails.plugin.springsecurity.SpringSecurityUtils.findInferredAuthorities(SpringSecurityUtils.java:752)
+	at grails.plugin.springsecurity.SpringSecurityUtils.ifNotGranted(SpringSecurityUtils.java:220)
+	at grails.plugin.springsecurity.SpringSecurityUtils.ifNotGranted(SpringSecurityUtils.java:216)
+	at balsa.AbstractDatasetController.index_closure1(AbstractDatasetController.groovy:31)
+	at balsa.AbstractDatasetController.index_closure1(AbstractDatasetController.groovy)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at groovy.lang.Closure.call(Closure.java:423)
+	at groovy.lang.Closure.call(Closure.java:417)
+	at grails.gorm.CriteriaBuilder.invokeClosureNode(CriteriaBuilder.java:1104)
+	at grails.gorm.CriteriaBuilder.list(CriteriaBuilder.java:248)
+	at grails.gorm.CriteriaBuilder.list(CriteriaBuilder.java:52)
+	at balsa.AbstractDatasetController.index(AbstractDatasetController.groovy:30)
+	at balsa.ReferenceControllerSpec.Test the index action returns the correct model(ReferenceControllerSpec.groovy:19)
+
+Testcase: Test the create action returns the correct model took 0.059 sec
+	FAILED
+Condition not satisfied:
+
+model.referenceInstance!= null
+|     |                |
+[:]   null             false
+
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+model.referenceInstance!= null
+|     |                |
+[:]   null             false
+
+	at balsa.ReferenceControllerSpec.Test the create action returns the correct model(ReferenceControllerSpec.groovy:31)
+
+Testcase: Test the save action correctly persists an instance took 0.086 sec
+	FAILED
+Condition not satisfied:
+
+model.referenceInstance!= null
+|     |                |
+|     null             false
+[datasetInstance:balsa.Reference : (unsaved)]
+
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+model.referenceInstance!= null
+|     |                |
+|     null             false
+[datasetInstance:balsa.Reference : (unsaved)]
+
+	at balsa.ReferenceControllerSpec.Test the save action correctly persists an instance(ReferenceControllerSpec.groovy:44)
+
+Testcase: Test that the show action returns the correct model took 0.034 sec
+	Caused an ERROR
+No signature of method: balsa.ReferenceController.show() is applicable for argument types: (null) values: [null]
+Possible solutions: show(), save(), raw(java.lang.Object), save(balsa.Reference), wait(), edit()
+groovy.lang.MissingMethodException: No signature of method: balsa.ReferenceController.show() is applicable for argument types: (null) values: [null]
+Possible solutions: show(), save(), raw(java.lang.Object), save(balsa.Reference), wait(), edit()
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.ReferenceControllerSpec.Test that the show action returns the correct model(ReferenceControllerSpec.groovy:62)
+
+Testcase: Test that the edit action returns the correct model took 0.028 sec
+	Caused an ERROR
+No signature of method: balsa.ReferenceController.edit() is applicable for argument types: (null) values: [null]
+Possible solutions: edit(), wait(), wait(long), delete(), wait(long, int), with(groovy.lang.Closure)
+groovy.lang.MissingMethodException: No signature of method: balsa.ReferenceController.edit() is applicable for argument types: (null) values: [null]
+Possible solutions: edit(), wait(), wait(long), delete(), wait(long, int), with(groovy.lang.Closure)
+	at org.codehaus.groovy.grails.plugins.web.api.ControllerTagLibraryApi.methodMissing(ControllerTagLibraryApi.java:97)
+	at org.springsource.loaded.ri.ReflectiveInterceptor.jlrMethodInvoke(ReflectiveInterceptor.java:1270)
+	at balsa.ReferenceControllerSpec.Test that the edit action returns the correct model(ReferenceControllerSpec.groovy:78)
+
+Testcase: Test the update action performs an update on a valid domain instance took 0.054 sec
+	FAILED
+Condition not satisfied:
+
+response.redirectedUrl == '/reference/index'
+|        |             |
+|        null          false
+org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@42cef0af
+
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+response.redirectedUrl == '/reference/index'
+|        |             |
+|        null          false
+org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@42cef0af
+
+	at balsa.ReferenceControllerSpec.Test the update action performs an update on a valid domain instance(ReferenceControllerSpec.groovy:99)
+
+Testcase: Test that the delete action deletes an instance if it exists took 0.054 sec
+	FAILED
+Condition not satisfied:
+
+response.redirectedUrl == '/reference/index'
+|        |             |
+|        null          false
+org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@76a13b12
+
+junit.framework.AssertionFailedError: Condition not satisfied:
+
+response.redirectedUrl == '/reference/index'
+|        |             |
+|        null          false
+org.codehaus.groovy.grails.plugins.testing.GrailsMockHttpServletResponse@76a13b12
+
+	at balsa.ReferenceControllerSpec.Test that the delete action deletes an instance if it exists(ReferenceControllerSpec.groovy:131)
+

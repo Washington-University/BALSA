@@ -1,0 +1,768 @@
+.demo {
+  font: 12px normal Arial, Helvetica, sans-serif;
+  width: 312px;
+}
+.demo .placeholder {
+  color: #abc;
+  font-size: 20px;
+  width: 100%;
+  line-height: 50px;
+  vertical-align: middle;
+  text-align: center;
+  z-index: 0;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.68);
+}
+.demo .fileinput {
+  display: block;
+  width: auto;
+  height: 24px;
+  vertical-align: middle;
+  overflow: hidden;
+  margin-bottom: -40px;
+}
+.demo .fileinput .message {
+  font-weight: bold;
+  height: 20px;
+  line-height: 20px;
+  padding-left: 20px;
+  padding-top: 3px;
+  background-image: url(select-b6fe960be3a07ab9e81960be332687c3.gif);
+  background-repeat: no-repeat;
+  background-position: left center;
+  cursor: pointer;
+}
+.demo .fileinput input {
+  KHTMLOpacity: 0;
+  MozOpacity: 0;
+  -khtml-opacity: 0;
+  -ms-filter: "alpha(opacity=0)";
+  -moz-opacity: 0;
+  opacity: 0;
+  width: 10px;
+}
+.demo .info-badge {
+  width: 33px;
+  height: 33px;
+  background-image: url(badge-0633ed1cc9a5a56c27fd5e978dd6d6e3.gif);
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  left: 288px;
+  top: 24px;
+  color: #fff;
+  font: 12px normal Arial, Helvetica, sans-serif;
+  line-height: 33px;
+  text-align: center;
+  cursor: default;
+}
+.demo .files {
+  min-height: 50px;
+  margin: 10px;
+  padding: 8px 10px 10px 8px;
+  z-index: 1;
+  box-shadow: 0 0 20px #ccc;
+}
+.demo .files.demo-dropable {
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 2px dashed #ccc;
+}
+.demo .files .file {
+  width: 100%;
+  height: 24px;
+  background-color: transparent;
+}
+.demo .files .file .background {
+  display: block;
+  width: inherit;
+  height: inherit;
+  background-color: #c0ddea;
+  border: 1px solid #003a69;
+}
+.demo .files .file .upload-progress {
+  display: block;
+  height: inherit;
+  background: #ffb16f;
+  border: 1px solid #e24912;
+  margin-top: -26px;
+  width: 0%;
+}
+.demo .files .file .upload-progress.complete {
+  background: #bce08a;
+  border: 1px solid #545f1d;
+}
+.demo .files .file .upload-progress.failed {
+  background-color: #ffb8ad;
+  border: 1px solid #fe4819;
+}
+.demo .files .file .info {
+  display: block;
+  height: inherit;
+  margin-top: -25px;
+  vertical-align: middle;
+  margin-left: 5px;
+  font-family: Arial,'Helvetica Neue',Helvetica,sans-serif;
+}
+.demo .files .file .info .spinner {
+  background-image: url(importing-4889784689c1b8109f97a0eecf9265f4.gif);
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: inline-block;
+  margin-top: 15px;
+  float: right;
+}
+.demo .files .file .info .controls {
+  display: inline-block;
+  width: 66px;
+  height: 24px;
+  float: right;
+  overflow: hidden;
+  margin: -2px -2px 0px 0px;
+}
+.demo .files .file .info .controls .buttons {
+  display: block;
+  vertical-align: top;
+  width: 64px;
+  height: 16px;
+  margin: 2px 2px 2px 0px;
+}
+.demo .files .file .info .controls .buttons .button {
+  display: inline-block;
+  float: right;
+  width: 16px;
+  height: 16px;
+}
+.demo .files .file .info .controls .buttons .button.view {
+  background-image: url(view-a1730a87af7a9806e4639a1ce4bf1169.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.demo .files .file .info .controls .buttons .button.download {
+  background-image: url(download-dd5cf1aee89735e45231265a0752ed7b.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.demo .files .file .info .controls .buttons .button.color {
+  background-image: url(color-7ece69b45f100bd97b52c309206fdf03.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.demo .files .file .info .controls .buttons .button.delete {
+  background-image: url(delete-708f965cf4951dfdb2c0ed35412ace0b.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.demo .files .file .info .controls .buttons .button.cancel {
+  background-image: url(cancel-ee0ab55851b011a3bd6f2b8be3ff4960.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.demo .files .file .info .controls .voting {
+  display: block;
+  width: 34px;
+  height: 16px;
+  float: right;
+  margin: 0px 2px 0px 0px;
+}
+.demo .files .file .info .controls .voting .like {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  padding-left: 2px;
+  background-image: url(like-4cd24bf90b41d8d2b59d678220ccdadb.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.demo .files .file .info .controls .voting .unlike {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url(unlike-4615dadc1cc466ae90921c14e0489c57.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+.demo .files .file .info .details {
+  display: inline-block;
+  width: 200px;
+  height: 12px;
+}
+.demo .files .file .info .details .name {
+  color: #FFFFFF;
+  font-weight: bold;
+  letter-spacing: -1px;
+  font-size: 11px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.68);
+  width: auto;
+}
+.demo .files .file .info .details .size {
+  display: inline-block;
+  color: #243748;
+  width: 50px;
+  font-size: 8px;
+  line-height: 10px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.33);
+}
+.demo .files .file .info .details .percentage {
+  display: inline-block;
+  width: 50px;
+  color: #243748;
+  font-size: 10px;
+  line-height: 10px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.33);
+}
+.demo .files .file .info .details .speed {
+  display: inline-block;
+  width: 100px;
+  color: #243748;
+  font-size: 8px;
+  line-height: 10px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.33);
+}
+.demo .files .file .info .details .rating {
+  display: none;
+  width: 90px;
+  height: 18px;
+}
+.demo .files .file .info .details .rating .empty {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-image: url(rating_empty-f8a5e774854e8af0ba7643d018ebd351.png);
+}
+.demo .files .file .info .details .rating .half {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-image: url(rating_half-6ecf1053de8d9f1c9d56e47d967b1c52.png);
+}
+.demo .files .file .info .details .rating .full {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-image: url(rating_full-4813e2db55011e5646e6f1f7b302f53b.png);
+}
+.demo .pagination {
+  display: block;
+  height: 20px;
+  width: 100%;
+  margin: -8px 10px 10px 8px;
+}
+.demo .pagination .previous {
+  display: inline-block;
+  background-image: url(previous-28a9db07494865b9d32df43081fbdfba.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+  width: 20px;
+  height: 20px;
+}
+.demo .pagination .next {
+  display: inline-block;
+  background-image: url(next-1d13682bd2451bc3d68639e42950bec3.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+  width: 20px;
+  height: 20px;
+}
+.demo .pagination .pages {
+  display: inline-block;
+  min-width: 20px;
+  height: 18px;
+  line-height: 18px;
+  vertical-align: middle;
+  margin-top: -12px;
+}
+.demo .pagination .pages li {
+  display: inline-block;
+  width: 10px;
+  list-style: none;
+  font-family: Arial,'Helvetica Neue',Helvetica,sans-serif;
+  font-size: 10px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.33);
+  letter-spacing: -2px;
+}
+.demo .pagination .pages li.current {
+  font-weight: bold;
+  color: #0096db;
+}
+.demo .pickr {
+  width: 124px;
+  height: auto;
+  opacity: 0.8;
+  position: absolute;
+  z-index: 10;
+}
+.demo .pickr .arrow {
+  display: inline-block;
+  float: right;
+  vertical-align: top;
+  margin-top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #000;
+  z-index: 12;
+}
+.demo .pickr .content {
+  float: right;
+  display: inline-block;
+  width: 106px;
+  height: auto;
+  background-color: #000;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 2px solid #000;
+  box-shadow: 0 0 20px #CCCCCC;
+  z-index: 11;
+}
+.demo .pickr .content ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 5px 0px 0px 4px;
+}
+.demo .pickr .content ul li {
+  display: inline-block;
+  float: left;
+  width: 24px;
+  height: 20px;
+  margin: 0px 4px 5px 0px;
+}
+.demo .pickr .content ul li.current {
+  background-image: url(clock-db5740a58ced8a85834e1ecc549824df.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/** bootstrap specific adjustments **/
+.container .demo .files .file {
+  margin-top: -1px;
+}
+.container .demo .files .file .upload-progress {
+  margin-top: -24px;
+}
+.container .demo .files .file .info {
+  margin-top: -24px;
+}
+.container .demo .files .file .info .controls .buttons {
+  margin: 5px 2px 2px 0px;
+}
+.container .demo .pickr {
+  width: 120px;
+}
+.container .demo .pickr .content {
+  width: 110px;
+}
+
+h1 {
+	font: 24px normal Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	color: #5585d7;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.68);
+}
+
+h1 a, h1 a:hover, h1:visited {
+	color: #5585d7;
+	text-decoration: none;
+	border-bottom: 2px dashed red;
+}
+
+h3 {
+	font: 12px normal Helvetica, Arial, sans-serif;
+	color: #5585d7;
+	padding-left: 20px;
+	font-style: italic;
+}
+
+h3 i {
+	color: #fd4239;
+	font-size: 14px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.68);
+	font-weight: normal;
+	font-style: normal;
+}
+
+.syntaxhighlighter {
+	width: 600px;
+}
+/**
+ * SyntaxHighlighter
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
+ *
+ * @version
+ * 3.0.83 (July 02 2010)
+ * 
+ * @copyright
+ * Copyright (C) 2004-2010 Alex Gorbatchev.
+ *
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
+ */
+.syntaxhighlighter {
+  background-color: white !important;
+}
+.syntaxhighlighter .line.alt1 {
+  background-color: white !important;
+}
+.syntaxhighlighter .line.alt2 {
+  background-color: white !important;
+}
+.syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
+  background-color: #c3defe !important;
+}
+.syntaxhighlighter .line.highlighted.number {
+  color: white !important;
+}
+.syntaxhighlighter table caption {
+  color: black !important;
+}
+.syntaxhighlighter .gutter {
+  color: #787878 !important;
+}
+.syntaxhighlighter .gutter .line {
+  border-right: 3px solid #d4d0c8 !important;
+}
+.syntaxhighlighter .gutter .line.highlighted {
+  background-color: #d4d0c8 !important;
+  color: white !important;
+}
+.syntaxhighlighter.printing .line .content {
+  border: none !important;
+}
+.syntaxhighlighter.collapsed {
+  overflow: visible !important;
+}
+.syntaxhighlighter.collapsed .toolbar {
+  color: #3f5fbf !important;
+  background: white !important;
+  border: 1px solid #d4d0c8 !important;
+}
+.syntaxhighlighter.collapsed .toolbar a {
+  color: #3f5fbf !important;
+}
+.syntaxhighlighter.collapsed .toolbar a:hover {
+  color: #aa7700 !important;
+}
+.syntaxhighlighter .toolbar {
+  color: #a0a0a0 !important;
+  background: #d4d0c8 !important;
+  border: none !important;
+}
+.syntaxhighlighter .toolbar a {
+  color: #a0a0a0 !important;
+}
+.syntaxhighlighter .toolbar a:hover {
+  color: red !important;
+}
+.syntaxhighlighter .plain, .syntaxhighlighter .plain a {
+  color: black !important;
+}
+.syntaxhighlighter .comments, .syntaxhighlighter .comments a {
+  color: #3f5fbf !important;
+}
+.syntaxhighlighter .string, .syntaxhighlighter .string a {
+  color: #2a00ff !important;
+}
+.syntaxhighlighter .keyword {
+  color: #7f0055 !important;
+}
+.syntaxhighlighter .preprocessor {
+  color: #646464 !important;
+}
+.syntaxhighlighter .variable {
+  color: #aa7700 !important;
+}
+.syntaxhighlighter .value {
+  color: #009900 !important;
+}
+.syntaxhighlighter .functions {
+  color: #ff1493 !important;
+}
+.syntaxhighlighter .constants {
+  color: #0066cc !important;
+}
+.syntaxhighlighter .script {
+  font-weight: bold !important;
+  color: #7f0055 !important;
+  background-color: none !important;
+}
+.syntaxhighlighter .color1, .syntaxhighlighter .color1 a {
+  color: gray !important;
+}
+.syntaxhighlighter .color2, .syntaxhighlighter .color2 a {
+  color: #ff1493 !important;
+}
+.syntaxhighlighter .color3, .syntaxhighlighter .color3 a {
+  color: red !important;
+}
+
+.syntaxhighlighter .keyword {
+  font-weight: bold !important;
+}
+.syntaxhighlighter .xml .keyword {
+  color: #3f7f7f !important;
+  font-weight: normal !important;
+}
+.syntaxhighlighter .xml .color1, .syntaxhighlighter .xml .color1 a {
+  color: #7f007f !important;
+}
+.syntaxhighlighter .xml .string {
+  font-style: italic !important;
+  color: #2a00ff !important;
+}
+
+/**
+ * SyntaxHighlighter
+ * http://alexgorbatchev.com/SyntaxHighlighter
+ *
+ * SyntaxHighlighter is donationware. If you are using it, please donate.
+ * http://alexgorbatchev.com/SyntaxHighlighter/donate.html
+ *
+ * @version
+ * 3.0.83 (July 02 2010)
+ * 
+ * @copyright
+ * Copyright (C) 2004-2010 Alex Gorbatchev.
+ *
+ * @license
+ * Dual licensed under the MIT and GPL licenses.
+ */
+.syntaxhighlighter a,
+.syntaxhighlighter div,
+.syntaxhighlighter code,
+.syntaxhighlighter table,
+.syntaxhighlighter table td,
+.syntaxhighlighter table tr,
+.syntaxhighlighter table tbody,
+.syntaxhighlighter table thead,
+.syntaxhighlighter table caption,
+.syntaxhighlighter textarea {
+  -moz-border-radius: 0 0 0 0 !important;
+  -webkit-border-radius: 0 0 0 0 !important;
+  background: none !important;
+  border: 0 !important;
+  bottom: auto !important;
+  float: none !important;
+  height: auto !important;
+  left: auto !important;
+  line-height: 1.1em !important;
+  margin: 0 !important;
+  outline: 0 !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  position: static !important;
+  right: auto !important;
+  text-align: left !important;
+  top: auto !important;
+  vertical-align: baseline !important;
+  width: auto !important;
+  box-sizing: content-box !important;
+  font-family: "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  font-size: 1em !important;
+  min-height: inherit !important;
+  min-height: auto !important;
+}
+
+.syntaxhighlighter {
+  width: 100% !important;
+  margin: 1em 0 1em 0 !important;
+  position: relative !important;
+  overflow: auto !important;
+  font-size: 1em !important;
+}
+.syntaxhighlighter.source {
+  overflow: hidden !important;
+}
+.syntaxhighlighter .bold {
+  font-weight: bold !important;
+}
+.syntaxhighlighter .italic {
+  font-style: italic !important;
+}
+.syntaxhighlighter .line {
+  white-space: pre !important;
+}
+.syntaxhighlighter table {
+  width: 100% !important;
+}
+.syntaxhighlighter table caption {
+  text-align: left !important;
+  padding: .5em 0 0.5em 1em !important;
+}
+.syntaxhighlighter table td.code {
+  width: 100% !important;
+}
+.syntaxhighlighter table td.code .container {
+  position: relative !important;
+}
+.syntaxhighlighter table td.code .container textarea {
+  box-sizing: border-box !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  background: white !important;
+  padding-left: 1em !important;
+  overflow: hidden !important;
+  white-space: pre !important;
+}
+.syntaxhighlighter table td.gutter .line {
+  text-align: right !important;
+  padding: 0 0.5em 0 1em !important;
+}
+.syntaxhighlighter table td.code .line {
+  padding: 0 1em !important;
+}
+.syntaxhighlighter.nogutter td.code .container textarea, .syntaxhighlighter.nogutter td.code .line {
+  padding-left: 0em !important;
+}
+.syntaxhighlighter.show {
+  display: block !important;
+}
+.syntaxhighlighter.collapsed table {
+  display: none !important;
+}
+.syntaxhighlighter.collapsed .toolbar {
+  padding: 0.1em 0.8em 0em 0.8em !important;
+  font-size: 1em !important;
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+}
+.syntaxhighlighter.collapsed .toolbar span {
+  display: inline !important;
+  margin-right: 1em !important;
+}
+.syntaxhighlighter.collapsed .toolbar span a {
+  padding: 0 !important;
+  display: none !important;
+}
+.syntaxhighlighter.collapsed .toolbar span a.expandSource {
+  display: inline !important;
+}
+.syntaxhighlighter .toolbar {
+  position: absolute !important;
+  right: 1px !important;
+  top: 1px !important;
+  width: 11px !important;
+  height: 11px !important;
+  font-size: 10px !important;
+  z-index: 10 !important;
+}
+.syntaxhighlighter .toolbar span.title {
+  display: inline !important;
+}
+.syntaxhighlighter .toolbar a {
+  display: block !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  padding-top: 1px !important;
+}
+.syntaxhighlighter .toolbar a.expandSource {
+  display: none !important;
+}
+.syntaxhighlighter.ie {
+  font-size: .9em !important;
+  padding: 1px 0 1px 0 !important;
+}
+.syntaxhighlighter.ie .toolbar {
+  line-height: 8px !important;
+}
+.syntaxhighlighter.ie .toolbar a {
+  padding-top: 0px !important;
+}
+.syntaxhighlighter.printing .line.alt1 .content,
+.syntaxhighlighter.printing .line.alt2 .content,
+.syntaxhighlighter.printing .line.highlighted .number,
+.syntaxhighlighter.printing .line.highlighted.alt1 .content,
+.syntaxhighlighter.printing .line.highlighted.alt2 .content {
+  background: none !important;
+}
+.syntaxhighlighter.printing .line .number {
+  color: #bbbbbb !important;
+}
+.syntaxhighlighter.printing .line .content {
+  color: black !important;
+}
+.syntaxhighlighter.printing .toolbar {
+  display: none !important;
+}
+.syntaxhighlighter.printing a {
+  text-decoration: none !important;
+}
+.syntaxhighlighter.printing .plain, .syntaxhighlighter.printing .plain a {
+  color: black !important;
+}
+.syntaxhighlighter.printing .comments, .syntaxhighlighter.printing .comments a {
+  color: #008200 !important;
+}
+.syntaxhighlighter.printing .string, .syntaxhighlighter.printing .string a {
+  color: blue !important;
+}
+.syntaxhighlighter.printing .keyword {
+  color: #006699 !important;
+  font-weight: bold !important;
+}
+.syntaxhighlighter.printing .preprocessor {
+  color: gray !important;
+}
+.syntaxhighlighter.printing .variable {
+  color: #aa7700 !important;
+}
+.syntaxhighlighter.printing .value {
+  color: #009900 !important;
+}
+.syntaxhighlighter.printing .functions {
+  color: #ff1493 !important;
+}
+.syntaxhighlighter.printing .constants {
+  color: #0066cc !important;
+}
+.syntaxhighlighter.printing .script {
+  font-weight: bold !important;
+}
+.syntaxhighlighter.printing .color1, .syntaxhighlighter.printing .color1 a {
+  color: gray !important;
+}
+.syntaxhighlighter.printing .color2, .syntaxhighlighter.printing .color2 a {
+  color: #ff1493 !important;
+}
+.syntaxhighlighter.printing .color3, .syntaxhighlighter.printing .color3 a {
+  color: red !important;
+}
+.syntaxhighlighter.printing .break, .syntaxhighlighter.printing .break a {
+  color: black !important;
+}
+
+/*
+* This is a manifest file that'll be compiled into application.css, which will include all the files
+* listed below.
+*
+* Any CSS file within this directory can be referenced here using a relative path.
+*
+* You're free to add application-wide styles to this file and they'll appear at the top of the
+* compiled file, but it's generally better to create a new file per style scope.
+*
+*= require demo
+*= require demopage
+*= require shThemeEclipse
+*= require shCore
+*= require_self
+*/
+
+$(document).ready(function() {
+    $('#clearButton3').on('click', function() {
+        $('.uploadr[name=myThirdUploadr]').data('uploadr').clear({
+            sound: true,
+            erase: false
+        });
+    });
+});
