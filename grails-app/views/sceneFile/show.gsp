@@ -27,7 +27,7 @@
 				</button>
 				</g:if>
 			</div>
-			<g:render template="/templates/fileModal" model="['files':dependencies,'datasetInstance':file.dataset, 'versionId': versionId]" />
+			<g:render template="/templates/fileModal" model="['files':dependencies,'datasetInstance':file.dataset]" />
 
 			<br><br>
 			<div class="well <g:datasetTerm item="${file}"/>" style="overflow: hidden;">

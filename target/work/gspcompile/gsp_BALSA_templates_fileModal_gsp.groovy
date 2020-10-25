@@ -14,17 +14,17 @@ registerSitemeshPreprocessMode()
 printHtmlPart(0)
 createTagBody(1, {->
 printHtmlPart(1)
-if(true && (datasetInstance.canEdit())) {
+if(true && (versionInstance && datasetInstance.canEdit())) {
 printHtmlPart(2)
 }
 printHtmlPart(3)
-if(true && (datasetInstance.canEdit())) {
+if(true && (versionInstance && datasetInstance.canEdit())) {
 printHtmlPart(4)
 }
 printHtmlPart(5)
 for( file in (files) ) {
 printHtmlPart(6)
-if(true && (datasetInstance.canEdit())) {
+if(true && (versionInstance && datasetInstance.canEdit())) {
 printHtmlPart(7)
 if(true && (!(file instanceof balsa.file.SceneFile || file instanceof balsa.file.Documentation || versionInstance.isDependentFile(file)))) {
 printHtmlPart(8)
@@ -47,7 +47,7 @@ expressionOut.print(file.filesize.toString().padLeft( 10, '0' ))
 printHtmlPart(15)
 invokeTag('displaySize','g',43,['bytes':(file.filesize)],-1)
 printHtmlPart(16)
-if(true && (datasetInstance.canEdit())) {
+if(true && (versionInstance && datasetInstance.canEdit())) {
 printHtmlPart(17)
 if(true && (file instanceof balsa.file.SceneFile || file instanceof balsa.file.Documentation || versionInstance.isDependentFile(file))) {
 printHtmlPart(18)
@@ -63,7 +63,7 @@ printHtmlPart(21)
 })
 invokeTag('form','g',61,['name':("removeFilesForm"),'action':("removeFiles"),'id':(datasetInstance.id)],1)
 printHtmlPart(22)
-if(true && (datasetInstance.canEdit())) {
+if(true && (versionInstance && datasetInstance.canEdit())) {
 printHtmlPart(23)
 expressionOut.print('Remove selected files from this ' + datasetTerm('item':datasetInstance) + '?' + 
 								((versionInstance.isPublic() || versionInstance.isApproved()) ? ' Removing files creates a new working version of the dataset, but the files will remain in the current public version.' : ''))
@@ -79,7 +79,7 @@ protected void init() {
 	this.jspTags = JSP_TAGS
 }
 public static final String CONTENT_TYPE = 'text/html;charset=UTF-8'
-public static final long LAST_MODIFIED = 1600115070649L
+public static final long LAST_MODIFIED = 1603667741242L
 public static final String EXPRESSION_CODEC = 'html'
 public static final String STATIC_CODEC = 'none'
 public static final String OUT_CODEC = 'html'

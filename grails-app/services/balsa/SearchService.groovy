@@ -9,7 +9,7 @@ import balsa.tagging.TagCategory
 class SearchService {
 	
 	def datasetSearch(params) {
-		if (!params || !params.rows || !params.columns) {
+		if (!params || !params.rows || !params.columns || !params.rows.isNumber() || !params.columns.isNumber()) {
 			return [datasets:[], totalCount:0]
 		}
 		params.max = Integer.valueOf(params.rows) * Integer.valueOf(params.columns) ?: 6
@@ -115,7 +115,7 @@ class SearchService {
 	}
 	
 	def sceneSearch(params) {
-		if (!params || !params.rows || !params.columns) {
+		if (!params || !params.rows || !params.columns || !params.rows.isNumber() || !params.columns.isNumber()) {
 			return [scenes:[], totalCount:0]
 		}
 		params.max = Integer.valueOf(params.rows) * Integer.valueOf(params.columns) ?: 6

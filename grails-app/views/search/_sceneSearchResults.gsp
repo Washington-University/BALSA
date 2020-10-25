@@ -9,7 +9,7 @@
 </g:if>
 </div>
 
-<g:if test="${searchResults.totalCount > Integer.valueOf(params.max)}">
+<g:if test="${searchResults.totalCount > params.max}">
 <div style="text-align:center;margin-top:-10px;margin-bottom:-25px">
 <util:remotePaginate controller="search" action="sceneSearch" total="${searchResults.totalCount}" params="${params}" update="sceneSearchResults" prev="&lt;&lt;" next="&gt;&gt;" onsuccess="updateRecentActivity();"/>
 </div>

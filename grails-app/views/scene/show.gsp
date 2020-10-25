@@ -33,7 +33,7 @@
 				<g:render template="/templates/buttons" bean="${sceneInstance}" var="item" />
 				<button type="button" class="btn btn-default" role="button" data-toggle="modal" data-target="#fileModal">Supporting Files</button>
 			</div>
-			<g:render template="/templates/fileModal" model="['files':sceneInstance.dependencies(),'datasetInstance':sceneInstance.sceneFile.dataset, 'versionId': versionId]" />
+			<g:render template="/templates/fileModal" model="['files':sceneInstance.dependencies(),'datasetInstance':sceneInstance.sceneFile.dataset]" />
 			<br><br>
 			<div class="well <g:datasetTerm item="${sceneInstance}"/>" style="overflow: hidden;">
 				<div class="pull-right" style="padding-left:10px">

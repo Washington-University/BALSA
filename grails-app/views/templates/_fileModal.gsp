@@ -11,13 +11,13 @@
 					<table class="table table-striped table-bordered tablesorter" id="fileTable" style="table-layout: fixed; width: 950px; margin-bottom: 0px">
 						<thead>
 							<tr>
-								<g:if test="${datasetInstance.canEdit()}">
+								<g:if test="${versionInstance && datasetInstance.canEdit()}">
 								<th style="width: 30px; cursor: pointer"></th>
 								</g:if>
 								<th style="width: 100px; cursor: pointer">Type&nbsp;</th>
 								<th style="width: 100%; max-width: 780px; cursor: pointer">Name&nbsp;</th>
 								<th style="width: 70px; cursor: pointer">Size&nbsp;</th>
-								<g:if test="${datasetInstance.canEdit()}">
+								<g:if test="${versionInstance && datasetInstance.canEdit()}">
 								<th style="width: 70px; cursor: pointer">Used&nbsp;</th>
 								</g:if>
 							</tr>
@@ -25,7 +25,7 @@
 						<tbody>
 							<g:each in="${files}" var="file">
 							<tr>
-								<g:if test="${datasetInstance.canEdit()}">
+								<g:if test="${versionInstance && datasetInstance.canEdit()}">
 								<td>
 									<input <g:if test="${!(file instanceof balsa.file.SceneFile || file instanceof balsa.file.Documentation || versionInstance.isDependentFile(file))}">class="unusedFile"</g:if>type="checkbox" id="fileToRemove" name="fileToRemove" value="${file.id}" />
 								</td>
@@ -42,7 +42,7 @@
 									<span style="display: none">${file.filesize.toString().padLeft( 10, '0' )}</span>
 									<g:displaySize bytes="${file.filesize}"/>
 								</td>
-								<g:if test="${datasetInstance.canEdit()}">
+								<g:if test="${versionInstance && datasetInstance.canEdit()}">
 								<td style="text-align:center">
 									<g:if test="${file instanceof balsa.file.SceneFile || file instanceof balsa.file.Documentation || versionInstance.isDependentFile(file)}">
 									<span style="display: none">1</span>
@@ -60,7 +60,7 @@
 					</table>
 					</g:form>
 				</div>
-				<g:if test="${datasetInstance.canEdit()}">
+				<g:if test="${versionInstance && datasetInstance.canEdit()}">
 					<div style="display:table;margin-top:15px;width:100%">
 						<div class="btn-group pull-left">
 							<button type="button" class="btn btn-default" onclick="selectAllUnused()">Check All Unused Files</button>

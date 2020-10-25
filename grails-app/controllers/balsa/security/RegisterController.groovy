@@ -36,8 +36,12 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 			return [registerCommand: new RegisterCommand()]
 		}
 		
-		if (!recaptchaService.verifyAnswer(session, request.getRemoteAddr(), params)) {
-			registerCommand.errors.reject('', 'Your reCAPTCHA answer was incorrect')
+//		if (!recaptchaService.verifyAnswer(session, request.getRemoteAddr(), params)) {
+//			registerCommand.errors.reject('', 'Your reCAPTCHA answer was incorrect')
+//		}
+		
+		if (registerCommand.username.contains('@')) {
+			registerCommand.errors.reject('username', 'Usernames may not contain @ symbols')
 		}
 		
 		/* check LDAP for existing user with same username

@@ -157,7 +157,7 @@
 						<p>
 							When you make changes to scenes after initial upload, save and upload the scene file again to update your study in BALSA (See Revise Scenes tab). Each time you 
 							upload, a new version of the Study will be created with a unique version ID. You can navigate to all versions from the Study page All Versions dropdown. The 
-							most recently modified version will be listed at the top of the dropdown and displayed for you on the study page.
+							most recently modified version will be listed at the top of the dropdown and displayed on the study page.
 						</p>
 					</div>
 					<div role="tabpanel" class="tab-pane whitetab" id="metadata">
@@ -335,7 +335,7 @@
 							from BALSA and extracted by other users.
 						</p>
 						<p>
-							Having the constituent files are in many different directories at many levels of directory structure is potentially confusing for end users. For some studies, 
+							Having the constituent files in many different directories at many levels of directory structure is potentially confusing for end users. For some studies, 
 							a good solution is to put the scene file in a main directory along with the other data files and perhaps various subdirectories. For other studies having multiple 
 							major directories representing different aspects of the analysis, it may be better to put the scene file(s) in a separate ‘nearby’ directory, clearly named to direct 
 							users to the scene files there. If you need to use a more complex directory structure, use the Description metadata field in the Study Details tab to explain where 

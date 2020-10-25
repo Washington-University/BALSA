@@ -62,7 +62,7 @@ invokeTag('createLink','g',25,['action':("remove"),'id':(file.id)],-1)
 printHtmlPart(15)
 }
 printHtmlPart(16)
-invokeTag('render','g',30,['template':("/templates/fileModal"),'model':(['files':dependencies,'datasetInstance':file.dataset, 'versionId': versionId])],-1)
+invokeTag('render','g',30,['template':("/templates/fileModal"),'model':(['files':dependencies,'datasetInstance':file.dataset])],-1)
 printHtmlPart(17)
 invokeTag('datasetTerm','g',33,['item':(file)],-1)
 printHtmlPart(18)
@@ -127,7 +127,7 @@ protected void init() {
 	this.jspTags = JSP_TAGS
 }
 public static final String CONTENT_TYPE = 'text/html;charset=UTF-8'
-public static final long LAST_MODIFIED = 1587769832822L
+public static final long LAST_MODIFIED = 1603667302009L
 public static final String EXPRESSION_CODEC = 'html'
 public static final String STATIC_CODEC = 'none'
 public static final String OUT_CODEC = 'html'

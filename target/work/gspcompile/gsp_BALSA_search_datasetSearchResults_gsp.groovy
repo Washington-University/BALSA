@@ -32,7 +32,7 @@ i++
 printHtmlPart(2)
 }
 printHtmlPart(3)
-if(true && (searchResults.totalCount > Integer.valueOf(params.max))) {
+if(true && (searchResults.totalCount > params.max)) {
 printHtmlPart(4)
 invokeTag('remotePaginate','util',14,['controller':("search"),'action':("datasetSearch"),'total':(searchResults.totalCount),'params':(params),'update':("datasetSearchResults"),'prev':("&lt;&lt;"),'next':("&gt;&gt;"),'onsuccess':("updateRecentActivity();")],-1)
 printHtmlPart(5)
@@ -47,7 +47,7 @@ protected void init() {
 	this.jspTags = JSP_TAGS
 }
 public static final String CONTENT_TYPE = 'text/html;charset=UTF-8'
-public static final long LAST_MODIFIED = 1589072972135L
+public static final long LAST_MODIFIED = 1603668766684L
 public static final String EXPRESSION_CODEC = 'html'
 public static final String STATIC_CODEC = 'none'
 public static final String OUT_CODEC = 'html'

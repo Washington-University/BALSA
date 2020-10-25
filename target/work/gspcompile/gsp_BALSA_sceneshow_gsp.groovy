@@ -52,7 +52,7 @@ printHtmlPart(12)
 printHtmlPart(12)
 invokeTag('render','g',33,['template':("/templates/buttons"),'bean':(sceneInstance),'var':("item")],-1)
 printHtmlPart(13)
-invokeTag('render','g',36,['template':("/templates/fileModal"),'model':(['files':sceneInstance.dependencies(),'datasetInstance':sceneInstance.sceneFile.dataset, 'versionId': versionId])],-1)
+invokeTag('render','g',36,['template':("/templates/fileModal"),'model':(['files':sceneInstance.dependencies(),'datasetInstance':sceneInstance.sceneFile.dataset])],-1)
 printHtmlPart(14)
 invokeTag('datasetTerm','g',38,['item':(sceneInstance)],-1)
 printHtmlPart(15)
@@ -88,7 +88,7 @@ protected void init() {
 	this.jspTags = JSP_TAGS
 }
 public static final String CONTENT_TYPE = 'text/html;charset=UTF-8'
-public static final long LAST_MODIFIED = 1593464532643L
+public static final long LAST_MODIFIED = 1603667287180L
 public static final String EXPRESSION_CODEC = 'html'
 public static final String STATIC_CODEC = 'none'
 public static final String OUT_CODEC = 'html'
