@@ -2,7 +2,7 @@ package balsa.security
 
 import static org.springframework.http.HttpStatus.*
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 import javax.naming.NamingException
 
@@ -16,14 +16,14 @@ class TermsController extends AbstractBalsaController {
     def show(Terms termsInstance) {
 		if (notFound(termsInstance)) return
 		
-        [termsInstance: termsInstance]
+        [termsInstance: termsInstance, alreadyAgreed: userService.current?.agreedTerms?.contains(termsInstance)]
     }
 
 	@Transactional
 	def agree(Terms termsInstance) {
 		if (notFound(termsInstance)) return
 		
-		BalsaUser user = springSecurityService.currentUser
+		BalsaUser user = userService.current
 		try {
 			termsInstance.agree(user)
 			render(status: 200)
@@ -40,17 +40,17 @@ class TermsController extends AbstractBalsaController {
 	
 	@Secured("permitAll")
 	def submission() {
-		def submissionTerms = Terms.findByTitle(grailsApplication.config.BALSA.submissionTerms.title)
+		def submissionTerms = Terms.findByTitle(grailsApplication.config.HCP.submissionTerms.title)
 		
 		if (params.type =='JSON') {
 			render submissionTerms.contents
 			return
 		}
 		
-		[submissionTerms: submissionTerms, alreadyAgreed: springSecurityService.currentUser?.agreedTerms?.contains(submissionTerms)]
+		[submissionTerms: submissionTerms, alreadyAgreed: userService.current?.agreedTerms?.contains(submissionTerms)]
 	}
 	
 	def mine() {
-		[terms: springSecurityService.currentUser?.agreedTerms.sort{it.title}]
+		[terms: userService.current?.agreedTerms.sort{it.title}]
 	}
 }

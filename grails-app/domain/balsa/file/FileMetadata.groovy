@@ -7,6 +7,7 @@ import balsa.Dataset
 import balsa.Download
 import balsa.TagScanner
 import balsa.Version
+import balsa.security.BalsaUser
 
 @EqualsAndHashCode
 class FileMetadata {
@@ -30,6 +31,7 @@ class FileMetadata {
 	
 	static mapping = {
 		id generator: "balsa.BalsaIdGenerator"
+		dataset lazy: false
 		filename type: "text", index: 'file_name_index'
 		filepath type: "text", index: 'file_path_index'
 		createdBy type: "text"

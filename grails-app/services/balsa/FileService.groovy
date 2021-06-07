@@ -1,6 +1,6 @@
 package balsa
 
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import grails.validation.ValidationException
 
 import java.security.MessageDigest
@@ -49,7 +49,7 @@ import balsa.tagging.TagHandle
 class FileService {
 	SessionFactory sessionFactory
 	def grailsApplication
-	def springSecurityService
+	def userService
 	private static final SimpleDateFormat RFC2616 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US)
 	
 	def stagingArea() {
@@ -128,6 +128,10 @@ class FileService {
 							def filesize = entry.getSize()
 							def zipsize = entry.getCompressedSize()
 							
+							if (filepath.endsWith('.DS_Store')) {
+								break
+							}
+							
 							def newFile
 							try {
 								newFile = create(fileData, filepath, filesize, zipsize, dataset)
@@ -161,23 +165,25 @@ class FileService {
 						def filesize = file.length()
 						def zipsize = file.length()
 						
-						def newFile
-						try {
-							newFile = create(fileData, filename, filesize, zipsize, dataset)
+						if (!filename.endsWith('.DS_Store')) {
+							def newFile
+							try {
+								newFile = create(fileData, filename, filesize, zipsize, dataset)
+							}
+							catch (ValidationException e) {
+								newFile = createError(fileData, filename, dataset, "Processing failed to set all required values or required values missing from file.", e.getStackTrace().toString())
+							}
+							catch (BalsaException b) {
+								newFile = createError(fileData, filename, dataset, b.message, b.getStackTrace().toString())
+							}
+							catch (Exception e) {
+								newFile = createError(fileData, filename, dataset, "An error occured during processing.", e.getStackTrace().toString())
+							}
+							dataset.addToFiles(newFile)
+							dataset.save(failOnError: true)
+							newVersion.addOrReplaceFile(newFile)
+							file.delete()
 						}
-						catch (ValidationException e) {
-							newFile = createError(fileData, filename, dataset, "Processing failed to set all required values or required values missing from file.", e.getStackTrace().toString())
-						}
-						catch (BalsaException b) {
-							newFile = createError(fileData, filename, dataset, b.message, b.getStackTrace().toString())
-						}
-						catch (Exception e) {
-							newFile = createError(fileData, filename, dataset, "An error occured during processing.", e.getStackTrace().toString())
-						}
-						dataset.addToFiles(newFile)
-						dataset.save(failOnError: true)
-						newVersion.addOrReplaceFile(newFile)
-						file.delete()
 					}
 				}
 			}
@@ -212,7 +218,7 @@ class FileService {
 		file.fileDataId = fileData.id
 		file.filesize = filesize
 		file.zipsize = zipsize
-		file.createdBy = springSecurityService.currentUser.username // if I try to update a scene rather than replace it, this line throws a transient object error, lord knows why
+		file.createdBy = userService.current.username // if I try to update a scene rather than replace it, this line throws a transient object error, lord knows why
 		file.added = new Date()
 		InputStream input = getLOM().open(fileData.data).getInputStream()
 		try {
@@ -250,7 +256,7 @@ class FileService {
 		error.zipsize = 0
 		error.message = message
 		error.stacktrace = stacktrace
-		error.createdBy = springSecurityService.currentUser.username
+		error.createdBy = userService.current.username
 		error.added = new Date()
 		error.save(failOnError: true)
 		error

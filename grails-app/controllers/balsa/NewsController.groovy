@@ -1,7 +1,8 @@
 package balsa
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional;
+import grails.gorm.transactions.Transactional
+import balsa.security.BalsaUser
 
 @Transactional(readOnly = true)
 @Secured(['ROLE_CURATOR'])
@@ -25,10 +26,11 @@ class NewsController extends AbstractBalsaController {
 	}
 
 	@Transactional
-	def save(News newsInstance) {
+	def save(News newsInstance) {		
 		if (notFound(newsInstance)) return
 		newsInstance.dateCreated = new Date()
-		newsInstance.createdBy = springSecurityService.currentUser
+		newsInstance.createdBy = userService.current
+		hasErrors(newsInstance, 'create', 'newsInstance')
 		if (hasErrors(newsInstance, 'create', 'newsInstance')) return
 
 		newsInstance.save flush:true
@@ -45,11 +47,13 @@ class NewsController extends AbstractBalsaController {
 	@Transactional
 	def update(News newsInstance) {
 		if (notFound(newsInstance)) return
+		newsInstance.createdBy = userService.current
 		if (hasErrors(newsInstance, 'edit', 'newsInstance')) return
 
 		newsInstance.save flush:true
 		
-		redirect action: 'show', id: newsInstance.id
+		
+		redirect action: 'index'
 	}
 
 	@Transactional
@@ -58,6 +62,6 @@ class NewsController extends AbstractBalsaController {
 
 		newsInstance.delete flush:true
 
-		render view: '/index'
+		redirect action: 'index'
 	}
 }

@@ -2,7 +2,7 @@ package balsa
 
 import net.kaleidos.hibernate.usertype.ArrayType
 
-import org.grails.databinding.BindingFormat
+import grails.databinding.BindingFormat
 
 import balsa.authorityControl.Institution
 import balsa.authorityControl.Publication
@@ -77,6 +77,7 @@ class Version {
 	
 	static mapping = {
 		id generator: "balsa.BalsaIdGenerator"
+		dataset lazy: false
 		status index: 'version_status_index'
 		updatedDate index: 'version_updated_index'
 		sceneFileOrder type:ArrayType, params: [type: String]
@@ -260,16 +261,14 @@ class Version {
 	}
 	
 	Set<SceneFile> sceneFiles() {
-		def returnList = [] as Set
-		for (file in files) {
-			if (file instanceof SceneFile) {
-				returnList.add(file)
-			}
-		}
+		def returnList = SceneFile.executeQuery("select s from SceneFile s join s.versions v where v.id = '" + this.id + "'");
+		
 		def sceneFileOrderList = sceneFileOrder ? Arrays.asList(sceneFileOrder) : []
 		returnList.sort { a,b ->
-			sceneFileOrderList?.indexOf(b.filename) <=> sceneFileOrderList?.indexOf(a.filename) ?: a.filename <=> b.filename
+			sceneFileOrderList?.indexOf(a.filename) <=> sceneFileOrderList?.indexOf(b.filename) ?: a.filename <=> b.filename
 		}
+		
+		returnList
 	}
 
 	Set<Scene> scenes() {
@@ -338,5 +337,23 @@ class Version {
 	
 	def extractDirectory() {
 		dataset.extract + "_" + id[0..1] + "_" + dataset.id
+	}
+	
+	def focusSceneIndex() {
+		def focusSceneIndex = scenes().findIndexOf { it.sceneLine == focusScene }
+		focusSceneIndex >= 0 ? focusSceneIndex : 0
+	}
+	
+	def tagsInAllScenes() {
+		def tags
+		for (sceneFile in sceneFiles()) {
+			if(tags) {
+				tags = tags.intersect(sceneFile.tagsInAllScenes())
+			}
+			else {
+				tags = sceneFile.tagsInAllScenes()
+			}
+		}
+		tags
 	}
 }

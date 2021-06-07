@@ -2,6 +2,7 @@ package balsa.authorityControl
 
 import net.kaleidos.hibernate.usertype.ArrayType
 import balsa.Study
+import balsa.Version
 
 class Publication {
 	String id
@@ -9,7 +10,7 @@ class Publication {
 	String[] abbrNames = []
 	Boolean approved = false
 	
-	static hasMany = [studies: Study]
+	static hasMany = [studies: Study, versions: Version]
 
     static constraints = {
 		approved nullable: true

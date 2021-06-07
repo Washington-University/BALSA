@@ -2,6 +2,7 @@ package balsa.scene
 
 import balsa.Dataset
 import balsa.file.SceneFile
+import balsa.security.BalsaUser
 
 class SceneLine {
 	String id
@@ -9,13 +10,14 @@ class SceneLine {
 	
 	static hasMany = [scenes: Scene, linkedDatasets: Dataset]
 	static belongsTo = [Dataset]
-	static mappedBy = [linkedDatasets: "linkedScenes"]
+	static mappedBy = [dataset: "sceneLines", linkedDatasets: "linkedScenes"]
 
     static constraints = {
     }
 	
 	static mapping = {
 		id generator: "assigned" // unlike other BALSA ids, scene ids must be assigned to maintain continuity
+		dataset lazy: false
 	}
 	
 	boolean isPublic(versionInfo = null) {

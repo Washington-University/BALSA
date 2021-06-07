@@ -3,23 +3,23 @@ package balsa
 import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.security.BalsaUser
 
 
 @Transactional(readOnly = true)
-	@Secured("ROLE_USER")
+@Secured("ROLE_USER")
 class ProfileController extends AbstractBalsaController {
 	static defaultAction = 'show'
 
     def show(BalsaUser balsaUser) {
 		if (notFound(balsaUser)) return
 		
-        [profileInstance: balsaUser.profile, ownProfile: (balsaUser == springSecurityService.currentUser)]
+        [profileInstance: balsaUser.profile, ownProfile: (balsaUser == userService.current)]
     }
 	
 	def mine() {
-		render view: 'show', model: [profileInstance: springSecurityService.currentUser.profile, ownProfile: true]
+		render view: 'show', model: [profileInstance: userService.current.profile, ownProfile: true]
 	}
 	
 	def downloads() {
@@ -29,10 +29,6 @@ class ProfileController extends AbstractBalsaController {
 	def terms() {
 		redirect controller: 'terms', action: 'mine'
 	}
-	
-    def edit() {
-        [profileInstance: springSecurityService.currentUser.profile]
-    }
 
     @Transactional
 	@Secured("@balsaSecurityService.isOwnProfile(#this) || hasRole('ROLE_ADMIN')")

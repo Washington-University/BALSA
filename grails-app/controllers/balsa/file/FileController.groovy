@@ -2,7 +2,7 @@ package balsa.file
 
 import static org.springframework.http.HttpStatus.*
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.AbstractBalsaController
 import balsa.Dataset
 import balsa.Study
@@ -14,13 +14,12 @@ import balsa.tagging.TagCategory
 class FileController extends AbstractBalsaController {
 	@Secured("permitAll")
     def index() {
-        params.max = 10
-		def fileList = getFileType().createCriteria().list(params) {
+		def fileList = getFileType().createCriteria().list() {
 			createAlias("versions", "v")
 			eq("v.status", Version.Status.PUBLIC)
 		}
 		
-        render (view: "/file/index", model:[fileList: fileList, fileCount: fileList.totalCount])
+        render (view: "/file/index", model:[fileList: fileList])
     }
 	
 	@Secured("(@balsaSecurityService.canView(#this, 'file') || @balsaSecurityService.isPublic(#this, 'file'))")
@@ -43,27 +42,7 @@ class FileController extends AbstractBalsaController {
 		
 		render (view: "/file/allScenes", model:[scenes:sceneList, file: file])
 	}
-	
-//	def edit(FileMetadata file) {
-//		if (notFound(file) || wrongType(file)) return
-//		
-//		if (file instanceof SceneFile) { // scene files have their own edit screen with special requirements
-//			redirect controller: 'sceneFile', action: 'edit', id: file.id
-//		}
-//		
-//		render (view: "/file/edit", model:[file: file, categories: TagCategory.list()])
-//	}
-//
-//	@Transactional
-//	def update(FileMetadata file) {
-//		if (notFound(file) || wrongType(file)) return
-//		if (hasErrors(file, 'edit', 'file')) return
-//
-//		file.save flush:true
-//
-//		redirect action: 'show', id: file.id
-//	}
-//	
+
 	def tagScan(FileMetadata file) {
 		if (notFound(file) || wrongType(file)) return
 		

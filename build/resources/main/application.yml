@@ -1,0 +1,221 @@
+---
+grails:
+    config:
+        locations:
+            - file:///Users/john/BALSA/balsa-config.yml
+            - file:///data/balsa/balsa-config.yml
+    profile: web
+    codegen:
+        defaultPackage: balsa
+    gorm:
+        reactor:
+            # Whether to translate GORM events into Reactor events
+            # Disabled by default for performance reasons
+            events: false
+info:
+    app:
+        name: 'BALSA'
+        version: '0.1'
+        grailsVersion: '4.0.4'
+spring:
+    jmx:
+        unique-names: true
+    main:
+        banner-mode: "off"
+    groovy:
+        template:
+            check-template-location: false
+    devtools:
+        restart:
+            additional-exclude:
+                - '*.gsp'
+                - '**/*.gsp'
+                - '*.gson'
+                - '**/*.gson'
+                - 'logback.groovy'
+                - '*.properties'
+management:
+    endpoints:
+        enabled-by-default: false
+
+---
+grails:
+    mime:
+        disable:
+            accept:
+                header:
+                    userAgents:
+                        - Gecko
+                        - WebKit
+                        - Presto
+                        - Trident
+        types:
+            all: '*/*'
+            atom: application/atom+xml
+            css: text/css
+            csv: text/csv
+            form: application/x-www-form-urlencoded
+            html:
+                - text/html
+                - application/xhtml+xml
+            js: text/javascript
+            json:
+                - application/json
+                - text/json
+            multipartForm: multipart/form-data
+            pdf: application/pdf
+            rss: application/rss+xml
+            text: text/plain
+            hal:
+                - application/hal+json
+                - application/hal+xml
+            xml:
+                - text/xml
+                - application/xml
+    urlmapping:
+        cache:
+            maxsize: 1000
+    controllers:
+        defaultScope: singleton
+    converters:
+        encoding: UTF-8
+    views:
+        default:
+            codec: html
+        gsp:
+            encoding: UTF-8
+            htmlcodec: xml
+            codecs:
+                expression: html
+                scriptlet: html
+                taglib: none
+                staticparts: none
+    plugin:
+        twitterbootstrap:
+            fixtaglib: true
+        springsecurity:
+            sch:
+                strategyName: MODE_INHERITABLETHREADLOCAL
+            userLookup:
+                userDomainClassName: balsa.security.BalsaUser
+                authorityJoinClassName: balsa.security.UserRole
+            authority:
+                className: balsa.security.Role
+            controllerAnnotations:
+                staticRules:
+                    - pattern: '/'
+                      access: 'permitAll'
+                    - pattern: '/index'
+                      access: 'permitAll'
+                    - pattern: '/index.gsp'
+                      access: 'permitAll'
+                    - pattern: '/assets/**'
+                      access: 'permitAll'
+                    - pattern: '/**/js/**'
+                      access: 'permitAll'
+                    - pattern: '/**/css/**'
+                      access: 'permitAll'
+                    - pattern: '/**/images/**'
+                      access: 'permitAll'
+                    - pattern: '/**/favicon.ico'
+                      access: 'permitAll'
+                    - pattern: '/plugins/**'
+                      access: 'permitAll'
+                    - pattern: '/login/authenticate'
+                      access: 'permitAll'
+                    - pattern: '/logoff'
+                      access: 'permitAll'
+            roleHierarchy: 'ROLE_ADMIN > ROLE_CURATOR > ROLE_SUBMITTER > ROLE_USER'
+            logout:
+                postOnly: false
+            auth:
+                ajaxLoginFormUrl: /login/_auth
+
+            rememberMe:
+                persistent: true
+                persistentToken:
+                    domainClassName: balsa.PersistentLogin
+
+            ldap:
+                # search.base and rememberMe.usernameMapper.userDnBase must be identical
+                # authorities.groupSearchBase and rememberMe.detailsManager.groupSearchBase must be identical
+                search:
+                    filter: '(CN={0})'
+                authorities:
+                    groupSearchFilter: 'member={0}'
+                    retrieveDatabaseRoles: false
+                    retrieveGroupRoles: true
+                    ignorePartialResultException: true
+                useRememberMe: true
+                rememberMe:
+                    usernameMapper:
+                        usernameAttribute: CN
+                    detailsManager:
+                        groupMemberAttributeName: member
+                mapper:
+#                    userDetailsClass: BalsaUserDetails
+                    passwordAttributeName: 'unicodePwd'
+            ui:
+                register:
+                    emailFrom: 'noreply@balsa.wustl.edu'
+                    emailSubject: 'Welcome to BALSA'
+                    emailBody: '<p>You have successfully registered. Please take a moment to add detail to your <a href="http://balsa.wustl.edu/profile/edit/$user.profile.id">profile</a>.</p><p>Have questions about BALSA? Go <a href="http://balsa.wustl.edu/about">here</a>.</p>'
+                    defaultRoleNames: ['ROLE_USER']
+                forgotPassword:
+                    emailFrom: 'noreply@balsa.wustl.edu'
+                    emailSubject: 'BALSA Password Reset'
+                    emailBody: '<p>Follow <a href=$url>this link</a> to reset your password.</p>'
+                forgotUsername:
+                    emailFrom: 'noreply@balsa.wustl.edu'
+                    emailSubject: 'BALSA Username'
+                    emailBody: 'Your username is'
+management:
+    endpoints:
+        jmx:
+            unique-names: true
+---
+hibernate:
+    cache:
+        queries: false
+        use_second_level_cache: false
+        use_query_cache: false
+dataSource:
+    dbCreate: update
+    pooled: true
+    jmxExport: true
+    driverClassName: org.postgresql.Driver
+    dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
+    postgresql:
+        extensions:
+            sequence_per_table: false
+    properties:
+        jmxEnabled: true
+        initialSize: 5
+        maxActive: 50
+        minIdle: 5
+        maxIdle: 25
+        maxWait: 10000
+        maxAge: 600000
+        timeBetweenEvictionRunsMillis: 5000
+        minEvictableIdleTimeMillis: 60000
+        validationQuery: SELECT 1
+        validationQueryTimeout: 3
+        validationInterval: 15000
+        testOnBorrow: true
+        testWhileIdle: true
+        testOnReturn: false
+        jdbcInterceptors: ConnectionState
+        defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+HCP:
+    openAccess:
+        title: 'WU-Minn HCP Consortium Open Access Data Use Terms'
+        contents: "I request access to data collected by the Washington University - University of Minnesota Consortium of the Human Connectome Project (WU-Minn HCP), and I agree to the following:\n\n1. I will not attempt to establish the identity of or attempt to contact any of the included human subjects.\n\n2. I understand that under no circumstances will the code that would link these data to Protected Health Information be given to me, nor will any additional information about individual human subjects be released to me under these Open Access Data Use Terms.\n\n3. I will comply with all relevant rules and regulations imposed by my institution. This may mean that I need my research to be approved or declared exempt by a committee that oversees research on human subjects, e.g. my IRB or Ethics Committee. The released HCP data are not considered de-identified, insofar as certain combinations of HCP Restricted Data (available through a separate process) might allow identification of individuals.    Different committees operate under different national, state and local laws and may interpret regulations differently, so it is important to ask about this. If needed and upon request, the HCP will provide a certificate stating that you have accepted the HCP Open Access Data Use Terms.\n\n4. I may redistribute original WU-Minn HCP Open Access data and any derived data as long as the data are redistributed under these same Data Use Terms.\n\n5. I will acknowledge the use of WU-Minn HCP data and data derived from WU-Minn HCP data when publicly presenting any results or algorithms that benefitted from their use.\n\n\t1. Papers, book chapters, books, posters, oral presentations, and all other printed and digital presentations of results derived from HCP data should contain the following wording in the acknowledgments section: 'Data were provided [in part] by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University.'\n\n\t2. Authors of publications or presentations using WU-Minn HCP data should cite relevant publications describing the methods used by the HCP to acquire and process the data. The specific publications that are appropriate to cite in any given study will depend on what HCP data were used and for what purposes. An annotated and appropriately up-to-date list of publications that may warrant consideration is available at http://www.humanconnectome.org/about/acknowledgehcp.html\n\n\t3. The WU-Minn HCP Consortium as a whole should not be included as an author of publications or presentations if this authorship would be based solely on the use of WU-Minn HCP data.\n\n6. Failure to abide by these guidelines will result in termination of my privileges to access WU-Minn HCP data."
+    restrictedAccess:
+        title: 'Restricted Data Use Terms'
+        contents: 'Please fill out and submit the form found at the link below.'
+        link: 'humanconnectome.org/data/data-use-terms/DataUseTerms_HCP_RestrictedAccess_22Jul2014.pdf'
+    submissionTerms:
+        title: 'Terms and Conditions for Uploading Data to the Washington University (WU) BALSA Database'
+        contents: "Terms and Conditions for Uploading Data to the Washington University (WU) BALSA Database\n\nBy uploading data to the BALSA Database (Database) and using this website, you agree to the following BALSA Data Submission Terms and Conditions:\n\n1) You represent that you have the full power and authority to accept these Terms and Conditions.\n\n2) You represent that uploading the data into the Database, and the storage, use and distribution of the data by WU, will not infringe or invade any existing rights of third parties.\n\n3) You will upload into the Database only data that you have the legal right to upload.\n\n4) You have obtained all approvals, including any regulatory or ethics approvals, necessary to upload the data into the Database and the datas storage, use, and distribution by WU.\n\n5) For data associated with individual human subjects, you will upload only:\n\n    i) anonymized data, meaning that the data cannot in any way be linked to an individual person, or\n\n    ii) coded, de-identified data, meaning that a) no HIPAA elements of Protected Health Information (PHI), including visit date, are included in the data; and b) the subject code has not been created using elements of PHI: and c) the data cannot be linked to an individual person without access to the coding table and/or without disproportional efforts.\n\n6) If required by an Institutional Review Board, your institution's policies or other authority, you have uploaded the data with the appropriate data access terms or a data access approval policy.\n\n7) Your use of the Database does not cause WU to be your Business Associate as that term is defined by HIPAA.\n\n8) You will not share your BALSA account or password with anyone.\n\n9) You will establish only a single BALSA account.\n\n10) You will cooperate with the Database curators to address problems with erroneous or inappropriate submitted data or with impact of the data on operation of the Database.\n\n11) You will not interfere with the operation of the Database.\n\n12) WU retains the sole discretion to deny, disable or terminate your BALSA account and your access to all or any portions of the BALSA website.\n\n13) WU retains the sole discretion to reject or remove all data or any part of a data set from the Database.\n\n14) WU owns the Database and retains the right to cease supporting the Database or terminate the Database at any time without any obligation to make or store copies of data.\n\n15) You grant WU and its designees a perpetual, irrevocable, non-exclusive, royalty free license to store, reproduce and distribute your data and to exercise any and all rights to manage the data in the Database.    All right, title and interest in any inventions, discoveries, improvements or other intellectual property related to the development and operation of the Database are vested in WU.\n\n16) You will indemnify, defend and hold WU, its employees and agents, harmless against all claims, demands, costs and expense, including attorney fees incurred for any claims related to your use of the Database and the data uploaded by you into the Database including, without limitation, claims related to intellectual property rights, patient privacy or any other legal and regulatory action.\n\n17) WU is not responsible for the integrity or security of data uploaded into the database, and makes no representations regarding the data, the maintenance of the data or operation of the Database.\n\n18) WU makes no warranties or representations of any kind, express or implied, concerning any services, information, activities, management or intellectual property rights related to the data, the Database or the BALSA website, including whether the Database or the BALSA website is free of any viruses, harmful components or adverse attributes. Your use of the Database and the BALSA website are at your own risk.\n\n19) IN NO EVENT WILL WU BE LIABLE FOR DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, PUNITIVE, OR SPECIAL DAMAGES OF ANY KIND ARISING OUT OF THESE TERMS AND CONDITIONS, THE UPLOADING, STORAGE, MAINTENANCE OR DISTRIBUTION OF DATA IN THE DATABASE OR THE OPERATION OF THE DATABASE REGARDLESS OF THE CLAIM OR THEORY OF LIABILITY AND REGARDLESS OF WHETHER WU KNEW OR SHOULD HAVE KNOWN ABOUT THE POSSIBILITY OF SUCH DAMAGES.\n\n20)    WU retains the right to amend these Terms and Conditions at any time. WU will    make a good-faith effort to notify data owners of such changes via email. Use of the Database indicates acceptance of the Terms and Conditions in effect at the time of use.\n\n21) These Terms and Conditions will be governed by the laws of the State of Missouri."
+        
+        

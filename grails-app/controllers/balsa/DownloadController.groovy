@@ -1,7 +1,7 @@
 package balsa
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.file.FileMetadata
 import balsa.scene.Scene
 
@@ -9,13 +9,13 @@ import balsa.scene.Scene
 class DownloadController extends AbstractBalsaController {
 	@Secured('ROLE_USER')
 	def mine() {
-		[downloads: Download.findAllByUsername(springSecurityService.currentUser.username, [sort: 'date', order: 'asc'])]
+		[downloads: Download.findAllByUsername(userService.current.username)]
 	}
 	
 	@Transactional
 	@Secured('ROLE_USER')
 	def anonymize() {
-		def downloads = Download.findAllByUsername(springSecurityService.currentUser.username)
+		def downloads = Download.findAllByUsername(userService.current.username)
 		
 		downloads.each {
 			it.username = null
@@ -48,7 +48,6 @@ class DownloadController extends AbstractBalsaController {
 		def totalSize = 0
 		
 		// verify that all files/scenes are within requested version, if not render status 403
-		// TODO: create proper 403 page
 		for (file in files) {
 			if (!versionInstance.files.contains(file)) {
 				render status: 403
@@ -78,7 +77,7 @@ class DownloadController extends AbstractBalsaController {
 		}
 		
 		// create download object and add all elements to it
-		Download download = new Download(date: new Date(), username: springSecurityService.currentUser?.username, 
+		Download download = new Download(date: new Date(), username: userService.current?.username, 
 			ipAddress: request.getRemoteAddr(), totalSize: totalSize, dataset: versionInstance.dataset)
 		download.save(flush: true)
 		
@@ -99,42 +98,17 @@ class DownloadController extends AbstractBalsaController {
 	@Secured("(@balsaSecurityService.canView(#this, 'file') || @balsaSecurityService.isPublic(#this, 'file')) && @balsaSecurityService.hasAccess(#this, 'file')")
 	def downloadFile(FileMetadata file) {
 		if (notFound(file)) return
-		file.addToDownloads(new Download(date: new Date(), username: springSecurityService.currentUser?.username, ipAddress: request.getRemoteAddr(), totalSize: file.filesize, dataset: file.dataset))
+		file.addToDownloads(new Download(date: new Date(), username: userService.current?.username, ipAddress: request.getRemoteAddr(), totalSize: file.filesize, dataset: file.dataset))
 		fileService.downloadFile(file, response)
 	}
 	
 	@Secured('ROLE_CURATOR')
 	def stats() {
-		[downloadStats: statsService.getDownloadStats(50, null)]
+		[downloadStats: statsService.getDownloadStats(100, null)]
 	}
 	
 	@Secured('permitAll')
 	def robots() {
 		
-	}
-	
-	@Secured('ROLE_ADMIN')
-	def ipStats() {
-		def c = Download.createCriteria()
-		def results = c.list {
-			projections {
-				groupProperty "ipAddress"
-				count("id", "downloadCount")
-			}
-			order "downloadCount", "desc"
-		}
-		[results: results]
-	}
-	
-	@Transactional
-	@Secured('ROLE_ADMIN')
-	def purgeByIp() {
-		def toDelete = Download.findAllByIpAddress(params.ipAddress)
-		toDelete.each { download ->
-			download.files.collect().each { download.removeFromFiles(it) }
-			download.scenes.collect().each { download.removeFromScenes(it) }
-		}
-		toDelete*.delete()
-		redirect action: 'ipStats'
 	}
 }

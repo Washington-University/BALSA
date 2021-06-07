@@ -1,32 +1,30 @@
 package balsa
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 @Secured(['ROLE_CURATOR'])
 class CurationController extends AbstractBalsaController {
 	def twitter4jService
 
     def index() {
-        params.max = 10
-		def mainQueue = Version.createCriteria().list() {
-			eq("status", Version.Status.SUBMITTED)
-		}
-		def myQueue = Dataset.createCriteria().list() {
-			eq('curator', springSecurityService.currentUser)
-		}
-		def approvedQueue = Version.createCriteria().list() {
-			eq("status", Version.Status.APPROVED)
+		def queue = Version.createCriteria().list() {
+			or {
+				'in'("status", [Version.Status.SUBMITTED, Version.Status.APPROVED])
+//				dataset {
+//					isNotNull("curator")
+//				}
+			}
 		}
 		
-		[mainQueue: mainQueue, myQueue: myQueue, approvedQueue: approvedQueue]
+		[queue: queue]
 	}
 	
 	@Transactional
 	def addToMyQueue(Dataset datasetInstance) {
 		if (notFound(datasetInstance)) return
 		
-		datasetInstance.curator = springSecurityService.currentUser
+		datasetInstance.curator = userService.current
 		datasetInstance.save(flush:true)
 		
 		redirect action: 'index'

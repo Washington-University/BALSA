@@ -57,7 +57,7 @@ class Cifti extends Nifti {
 	
 	String extractCiftiXml(InputStream input) {
 		String concat = ""
-		while (!(concat.contains('<CIFTI') && concat.contains('</CIFTI>')) && concat.length() < 10485760) { // capping string length at 10 MB in case of wrong file type
+		while (!(concat.contains('<CIFTI') && concat.contains('</CIFTI>')) && concat.length() < 52428800) { // capping string length at 10 MB in case of wrong file type
 			byte[] b = new byte[20000]
 			input.read(b)
 			concat += new String(b)

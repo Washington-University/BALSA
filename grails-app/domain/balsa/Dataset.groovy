@@ -14,7 +14,7 @@ import balsa.security.Terms
 
 
 class Dataset {
-	def springSecurityService
+	UserService userService
 
 	String id
 	String title
@@ -36,8 +36,9 @@ class Dataset {
 	String customTermsContent
 
 	static hasMany = [versions: Version, files: FileMetadata, downloads: Download, sceneLines: SceneLine, linkedScenes: SceneLine, species: Species, accessAgreements: Terms, restrictedAccessTerms: Approval, issues: Issue]
-	static mappedBy = [linkedScenes: "linkedDatasets"]
+	static mappedBy = [sceneLines: "dataset", linkedScenes: "linkedDatasets"]
 
+	static transients = ['userService']
 	static constraints = {
 		title size: 5..200, blank: false
 		shortTitle size: 5..100, blank: true, nullable: true
@@ -53,6 +54,7 @@ class Dataset {
 		publicDate nullable: true
 	}
 	static mapping = {
+		autowire true
 		id generator: "balsa.BalsaIdGenerator"
 		title type: "text", index: 'dataset_title_index'
 		shortTitle type: "text", index: 'dataset_shorttitle_index'
@@ -134,7 +136,7 @@ class Dataset {
 	}
 
 	boolean hasAccess() {
-		hasAgreedToTerms(springSecurityService.currentUser) && isApprovedForAccess(springSecurityService.currentUser)
+		hasAgreedToTerms(userService.current) && isApprovedForAccess(userService.current)
 	}
 
 	boolean hasAgreedToTerms(BalsaUser user) {
@@ -149,16 +151,16 @@ class Dataset {
 
 	def terms() {
 		def numberOfTerms = accessAgreements.size() + restrictedAccessTerms.size() + (customTermsTitle && customTermsContent ? 1 : 0)
-		def agreed = accessAgreements.findAll { springSecurityService.currentUser?.agreedTerms?.contains(it) }
-		def notAgreed = accessAgreements.findAll { !springSecurityService.currentUser?.agreedTerms?.contains(it) }
-		def approved = accessAgreements.findAll { springSecurityService.currentUser?.grantedApprovals?.contains(it) }
-		def notApproved = accessAgreements.findAll { !springSecurityService.currentUser?.grantedApprovals?.contains(it) }
+		def agreed = accessAgreements.findAll { userService.current?.agreedTerms?.contains(it) }
+		def notAgreed = accessAgreements.findAll { !userService.current?.agreedTerms?.contains(it) }
+		def approved = accessAgreements.findAll { userService.current?.grantedApprovals?.contains(it) }
+		def notApproved = accessAgreements.findAll { !userService.current?.grantedApprovals?.contains(it) }
 
 		[numberOfTerms: numberOfTerms, agreed: agreed, notAgreed: notAgreed, approved: approved, notApproved: notApproved, customTermsTitle: customTermsTitle, customTermsContent: customTermsContent, datasetId: id]
 	}
 
 	boolean hasReadNotes() {
-		!notes || readNotes?.contains(springSecurityService.currentUser?.username)
+		!notes || readNotes?.contains(userService.current?.username)
 	}
 
 	def datasetId() {

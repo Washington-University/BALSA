@@ -2,7 +2,7 @@ package balsa
 
 import static org.springframework.http.HttpStatus.*
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 import org.apache.catalina.connector.ClientAbortException
 
@@ -19,7 +19,7 @@ class SceneController extends AbstractBalsaController {
 	def show(SceneLine sceneLineInstance) {
 		Scene sceneInstance = sceneLineInstance.sceneForVersion(params.version)
 		
-		[sceneInstance: sceneInstance, dependencies: sceneInstance.dependencies(params.version), versionId: params.version]
+		[sceneInstance: sceneInstance, dependencies: sceneInstance.dependencies(params.version)]
 	}
 	
 	@Secured("(@balsaSecurityService.canView(#this, 'scene') || @balsaSecurityService.isPublic(#this, 'scene'))")

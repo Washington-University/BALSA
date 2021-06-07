@@ -1,7 +1,7 @@
 package balsa
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import grails.util.Environment
 
 @Transactional(readOnly = true)
@@ -11,13 +11,13 @@ class ContactController extends AbstractBalsaController {
 	
 	@Transactional()
 	def tech() {
-		if (!recaptchaService.verifyAnswer(session, request.getRemoteAddr(), params)) {
+		if (!recaptchaService.verifyAnswer(session, params)) {
 			render(status: 418)
 			return
 		}
 		
 		def techMessage = new TechMessage()
-		techMessage.createdBy = springSecurityService.currentUser
+		techMessage.createdBy = userService.current
 		techMessage.title = params.title
 		techMessage.contents = params.contents
 		techMessage.createdDate = new Date()
@@ -39,14 +39,14 @@ class ContactController extends AbstractBalsaController {
 	}
 	
 	def curators() {
-		if (!recaptchaService.verifyAnswer(session, request.getRemoteAddr(), params)) {
+		if (!recaptchaService.verifyAnswer(session, params)) {
 			render(status: 418)
 			return
 		}
 		
-		if (Environment.current == Environment.PRODUCTION) {
+		
 			def contents = params.contents?.replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('\n','<br>')
-			def emailAddress = params.emailAddress ?: springSecurityService.currentUser?.profile?.emailAddress
+			def emailAddress = params.emailAddress ?: userService.current?.profile?.emailAddress
 			def emailClause = emailAddress ? ('<br><br>Replies should be sent to <a href="mailto:' +
 					emailAddress.replaceAll('<','&lt;').replaceAll('>','&gt;') + '">' +
 					emailAddress.replaceAll('<','&lt;').replaceAll('>','&gt;') + '</a>') : ''
@@ -55,9 +55,8 @@ class ContactController extends AbstractBalsaController {
 				to  grailsApplication.config.balsa.curatorContacts
 				from 'noreply@balsa.wustl.edu'
 				subject 'BALSA Message: ' + params.subject
-				html springSecurityService.currentUser.username + ' sent the following message to the BALSA curators:<br><br>"' + contents + '"' + emailClause
+				html userService.current.username + ' sent the following message to the BALSA curators:<br><br>"' + contents + '"' + emailClause
 			}
-		}
 		
 		render(status: 200)
 	}

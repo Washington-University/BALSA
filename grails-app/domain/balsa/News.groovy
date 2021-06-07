@@ -24,4 +24,8 @@ class News {
 	def subsequentLines() {
 		StringUtils.substringAfter(contents, "\n")
 	}
+	
+	def formattedDate() {
+		dateCreated.format("MMM. dd, yyyy")
+	}
 }

@@ -3,11 +3,10 @@ package balsa
 import grails.plugin.springsecurity.SpringSecurityUtils
 import net.kaleidos.hibernate.usertype.ArrayType
 
-import org.grails.databinding.BindingFormat
-
 import balsa.authorityControl.Institution
 import balsa.authorityControl.Publication
 import balsa.security.BalsaUser
+import grails.databinding.BindingFormat
 
 class Study extends Dataset {
 	@Deprecated
@@ -64,11 +63,11 @@ class Study extends Dataset {
 	}
 	
 	boolean canEdit() {
-		(owners?.contains(springSecurityService.currentUser) && SpringSecurityUtils.ifAnyGranted('ROLE_SUBMITTER') ) || SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_CURATOR')
+		( owners?.contains(userService.current) && SpringSecurityUtils.ifAnyGranted('ROLE_SUBMITTER') ) || SpringSecurityUtils.ifAnyGranted('ROLE_ADMIN, ROLE_CURATOR')
 	}
 	
 	boolean canView() {
-		owners?.contains(springSecurityService.currentUser) || viewers?.contains(springSecurityService.currentUser) || SpringSecurityUtils.ifAnyGranted('ROLE_CURATOR, ROLE_ADMIN')
+		owners?.contains(userService.current) || viewers?.contains(userService.current) || SpringSecurityUtils.ifAnyGranted('ROLE_CURATOR, ROLE_ADMIN')
 	}
 	
 	@Deprecated

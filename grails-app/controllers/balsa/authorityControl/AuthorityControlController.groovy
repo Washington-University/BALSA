@@ -1,7 +1,7 @@
 package balsa.authorityControl
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.AbstractBalsaController;
 import balsa.authorityControl.Institution
 import balsa.authorityControl.Publication

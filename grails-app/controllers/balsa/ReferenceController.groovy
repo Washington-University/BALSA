@@ -3,7 +3,7 @@ package balsa
 import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 import org.apache.commons.lang.ArrayUtils
 
@@ -81,7 +81,7 @@ class ReferenceController extends AbstractDatasetController {
 		workingVersion.focusScene = params.focusScene
 		workingVersion.sceneFileOrder = ArrayUtils.removeElement(params.sceneFileOrder.split(","), "")
 		
-		render view: '/dataset/saveSuccess'
+		render 'Save successful.'
 	}
 
 	@Transactional

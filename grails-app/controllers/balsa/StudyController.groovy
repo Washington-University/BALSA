@@ -3,7 +3,7 @@ package balsa
 import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 import org.apache.commons.lang.ArrayUtils
 
@@ -12,6 +12,7 @@ import balsa.authorityControl.Publication
 import balsa.scene.SceneLine
 import balsa.security.BalsaUser
 import balsa.security.Terms
+import balsa.file.FileMetadata
 
 
 @Transactional(readOnly = true)
@@ -26,11 +27,11 @@ class StudyController extends AbstractDatasetController {
 	
 	def mine() {
 		if (params.type == 'json') {
-			render springSecurityService.currentUser.studies as JSON
+			render userService.current.studies as JSON
 			return
 		}
 		
-		[studyInstanceList: springSecurityService.currentUser.studies]
+		[studyInstanceList: userService.current.studies]
 	}
 
 	@Transactional
@@ -39,7 +40,7 @@ class StudyController extends AbstractDatasetController {
 		
 		studyInstance.addToVersions(new Version())
 		
-		studyInstance.addToOwners(springSecurityService.currentUser)
+		studyInstance.addToOwners(userService.current)
 
 		studyInstance.save flush:true
 		
@@ -57,7 +58,7 @@ class StudyController extends AbstractDatasetController {
 		
 		studyInstance.addToVersions(new Version())
 		
-		studyInstance.addToOwners(springSecurityService.currentUser)
+		studyInstance.addToOwners(userService.current)
 
 		studyInstance.save flush:true
 		
@@ -155,7 +156,7 @@ class StudyController extends AbstractDatasetController {
 		}
 		versionInstance.publication = publication
 		
-		render view: '/dataset/saveSuccess'
+		render 'Save successful.'
 	}
 
 	@Transactional
@@ -180,7 +181,7 @@ class StudyController extends AbstractDatasetController {
 		def canUpload = true
 		def problems = []
 		
-		if (!springSecurityService.currentUser) {
+		if (!userService.current) {
 			problems.add("The user is not currently logged in.")
 			canUpload = false
 		}
@@ -194,6 +195,7 @@ class StudyController extends AbstractDatasetController {
 		render returnValue as JSON
 	}
 	
+	@Transactional
 	@Secured(['permitAll'])
 	def getPubMedData() {
 		def xmlSlurper = new XmlSlurper()
@@ -241,6 +243,27 @@ class StudyController extends AbstractDatasetController {
 		if(!data) return []
 		if(data.getClass().isArray()) return data
 		[data]
+	}
+	
+	
+	@Transactional
+	@Secured("@balsaSecurityService.canEdit(#this, 'dataset')")
+	def removeFiles() {
+		Dataset datasetInstance = Dataset.get(params.id)
+		if (notFound(datasetInstance) || wrongType(datasetInstance)) return
+		
+		def versionToAlter = new Version(datasetInstance.workingVersion())
+		versionToAlter.updatedDate = new Date()
+		
+		params.list('fileToRemove').each {
+			def fileToRemove = FileMetadata.get(it)
+			versionToAlter.removeFromFiles(fileToRemove)
+			fileToRemove.removeFromVersions(versionToAlter)
+		}
+		
+		versionToAlter.save()
+		
+		redirect action: 'show', id: datasetInstance.id
 	}
 }
 	

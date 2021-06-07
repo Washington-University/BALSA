@@ -180,6 +180,19 @@ class SceneFile extends FileMetadata {
 		returnList.toArray()
 	}
 	
+	def tagsInAllScenes() {
+		def tags
+		for (scene in scenes) {
+			if(tags) {
+				tags = tags.intersect(Arrays.asList(scene.tags))
+			}
+			else {
+				tags = Arrays.asList(scene.tags)
+			}
+		}
+		tags
+	}
+	
 //	intended to allow scene files that use balsa file ids for their files
 //	awaits integration with workbench stage
 //	public InputStream substituteLinks(InputStream original, Set<FileMetadata> filesToSubstitute) {

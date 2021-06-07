@@ -1,7 +1,7 @@
 package balsa.file
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.Study
 
 @Transactional(readOnly = true)

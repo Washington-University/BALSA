@@ -4,9 +4,6 @@ import balsa.Profile
 import balsa.Study
 
 class BalsaUser {
-
-	transient springSecurityService
-
 	String id
 	String username
 	boolean enabled = true
@@ -19,8 +16,6 @@ class BalsaUser {
 	static hasMany = [agreedTerms: Terms, grantedApprovals: Approval, ownedApprovals: Approval, soughtApprovals: Approval, studies: Study]
 	static mappedBy = [studies: "owners", grantedApprovals: "approvals", ownedApprovals: "owners"]
 	
-	static transients = ['springSecurityService']
-
 	static constraints = {
 		username blank: false, unique: true
 	}

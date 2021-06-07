@@ -2,27 +2,18 @@
 //
 // Any JavaScript file within this directory can be referenced here using a relative path.
 //
-// You're free to add application-wide JavaScript to this file, but it's generally better 
+// You're free to add application-wide JavaScript to this file, but it's generally better
 // to create separate JavaScript files as needed.
 //
-//= require jquery
+//= require jquery-3.6.0.min
 //= require jquery-ui
-//= require moment
-//= require_tree .
-//= require_self
-//= require bootstrap
-//= require bootstrap-datetimepicker
-//= require bootbox.min
-//= require jquery.tablesorter
+//= require moment-with-locales
 //= require indeterminateCheckbox
-//= require uploadr.manifest
-
-if (typeof jQuery !== 'undefined') {
-	(function($) {
-		$('#spinner').ajaxStart(function() {
-			$(this).fadeIn();
-		}).ajaxStop(function() {
-			$(this).fadeOut();
-		});
-	})(jQuery);
-}
+//= require jquery.tablesorter.min
+//= require jquery.tablesorter.pager.min
+//= require jquery.tablesorter.widgets.min
+//= require bootstrap.bundle
+//= require bootbox.all
+//= require bootstrap-datetimepicker
+//= require balsaUI
+//= require_self

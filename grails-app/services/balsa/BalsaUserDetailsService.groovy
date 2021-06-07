@@ -1,7 +1,7 @@
 package balsa
 
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 import java.lang.reflect.Field
 import java.util.Collection;
@@ -48,7 +48,6 @@ class BalsaUserDetailsService {
 	 */
 	def changePassword(String username, String newPassword) {
 		DistinguishedName dn = ldapUsernameMapper.buildDn(username)
-		
 		String newQuotedPassword = "\"" + newPassword + "\""
 		byte[] newUnicodePassword = newQuotedPassword.getBytes("UTF-16LE")
 		

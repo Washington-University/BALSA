@@ -6,7 +6,7 @@ class TagCategory {
 	String id
 	String name
 	String description
-	SearchType searchType
+	SearchType searchType = SearchType.CHECKBOX
 	String[] options = []
 	
 	static hasMany = [handles: TagHandle]
@@ -40,6 +40,19 @@ class TagCategory {
 		CHECKBOX { 
 			def template() {"checkbox"}
 			def or() {true}
+		}
+	}
+	
+	static def searchType(searchType) {
+		switch (searchType) {
+			case "dropdown":
+				return SearchType.DROPDOWN
+			case "field":
+				return SearchType.FIELD
+			case "radio":
+				return SearchType.RADIO
+			case "checkbox":
+				return SearchType.CHECKBOX
 		}
 	}
 }

@@ -9,14 +9,13 @@ import balsa.scene.SceneLine
 import balsa.security.BalsaUser
 
 class BalsaTagLib {
-	def springSecurityService
-	
-    static defaultEncodeAs = [taglib:'html']
+	def userService
+	def recaptchaService
 	
 	def isStudyOwner = { attrs, body ->
 		def studyId = attrs.studyId
 		Study study = Study.get(studyId)
-		BalsaUser user = springSecurityService.currentUser
+		BalsaUser user = userService.current
 		Profile profile = user.profile
 		boolean access = study.owners.contains(profile)
 		return access
@@ -317,5 +316,11 @@ class BalsaTagLib {
 			default:
 				out << FilenameUtils.getExtension(filename).toUpperCase()
 		}
+	}
+	
+	def recaptcha = { attrs, body ->
+		out << "<script src='https://www.google.com/recaptcha/api.js' async defer></script>"
+		out << "<script>function submit_${attrs.form}(token) { \$('#${attrs.form}').submit(); }</script>"
+		out << "<button class='btn btn-primary g-recaptcha' data-sitekey='${recaptchaService.siteKey}' data-callback='submit_${attrs.form}'>${attrs.value}</button>"
 	}
 }

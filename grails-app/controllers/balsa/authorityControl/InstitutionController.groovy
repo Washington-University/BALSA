@@ -2,9 +2,11 @@ package balsa.authorityControl
 
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.AbstractBalsaController
 import balsa.Study
+import balsa.Version
+import balsa.Profile
 
 @Transactional
 @Secured("ROLE_CURATOR")
@@ -79,7 +81,7 @@ class InstitutionController extends AbstractBalsaController {
 		if (notFound(institutionInstance)) return
 		
 		def newInstitution = Institution.get(params.replacement)
-		if (!newInstitution?.names.contains(institutionInstance.canonicalName)) {
+		if (newInstitution && !newInstitution.names.contains(institutionInstance.canonicalName)) {
 			def nameList = newInstitution.names as List
 			nameList.add(institutionInstance.canonicalName)
 			newInstitution.names = nameList as String[]
@@ -98,6 +100,34 @@ class InstitutionController extends AbstractBalsaController {
 			
 			if (params.replacement != 'delete') {
 				study.addToInstitutions(newInstitution)
+			}
+		}
+		
+		c = Version.createCriteria()
+		def versionsUsingInstitution = c.list() {
+			institutions {
+				idEq(institutionInstance.id)
+			}
+		}
+		for (version in versionsUsingInstitution) {
+			version.removeFromInstitutions(institutionInstance)
+			
+			if (params.replacement != 'delete') {
+				version.addToInstitutions(newInstitution)
+			}
+		}
+		
+		c = Profile.createCriteria()
+		def profilesUsingInstitution = c.list() {
+			institutions {
+				idEq(institutionInstance.id)
+			}
+		}
+		for (profile in profilesUsingInstitution) {
+			profile.removeFromInstitutions(institutionInstance)
+			
+			if (params.replacement != 'delete') {
+				profile.addToInstitutions(newInstitution)
 			}
 		}
 		

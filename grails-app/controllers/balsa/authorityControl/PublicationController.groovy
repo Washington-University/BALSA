@@ -2,9 +2,10 @@ package balsa.authorityControl
 
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.AbstractBalsaController
 import balsa.Study
+import balsa.Version
 
 @Transactional
 @Secured("ROLE_CURATOR")
@@ -79,25 +80,17 @@ class PublicationController extends AbstractBalsaController {
 		if (notFound(publicationInstance)) return
 		
 		def newPublication = Publication.get(params.replacement)
-		if (!newPublication.abbrNames.contains(publicationInstance.officialName)) {
+		if (newPublication && !newPublication.abbrNames.contains(publicationInstance.officialName)) {
 			def nameList = newPublication.abbrNames as List
 			nameList.add(publicationInstance.officialName)
 			newPublication.abbrNames = nameList as String[]
 		}
 		
-		// find all studies currently using this publication
-		def studiesUsingPublication = Study.findByPublication(publicationInstance)
+		// altering the objects doesn't seem to work to avoid foreign key problems, so I have to run direct update statements
+		Study.executeUpdate("update Study s set s.publication=:newPub where s.publication=:currentPub", [newPub: newPublication, currentPub: publicationInstance])
+		Version.executeUpdate("update Version v set v.publication=:newPub where v.publication=:currentPub", [newPub: newPublication, currentPub: publicationInstance])
 		
-		// change them to a replacement
-		for (study in studiesUsingPublication) {
-			study.publication = null
-			
-			if (params.replacement) {
-				study.publication = Publication.get(params.replacement)
-			}
-		}
-		
-		publicationInstance.delete flush:true
+		publicationInstance.delete flush: true
 		
 		redirect action: 'index'
 	}

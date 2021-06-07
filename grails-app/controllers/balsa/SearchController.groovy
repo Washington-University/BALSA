@@ -1,7 +1,7 @@
 package balsa
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.tagging.TagCategory
 
 @Secured("permitAll")
@@ -22,5 +22,11 @@ class SearchController extends AbstractBalsaController {
 	
 	def searchFilter() {
 		render template: 'searchFilter', model: [categories: TagCategory.list()]
+	}
+	
+	def carouselContents(Version versionInstance) {
+		def thumbnailSize = Float.parseFloat(params.ts);
+		
+		render template: "datasetSearchResult", model:[versionInstance:versionInstance,thumbnailSize:thumbnailSize]
 	}
 }

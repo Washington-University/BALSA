@@ -15,4 +15,9 @@ class TagHandle {
 	static mapping = {
 		id generator: "balsa.BalsaIdGenerator"
 	}
+	
+	TagHandle(parts) {
+		handle = parts.substring(0, parts.indexOf(':'))
+		value = parts.indexOf(':') == parts.length() - 1 ? null : parts.substring(parts.indexOf(':') + 1)
+	}
 }

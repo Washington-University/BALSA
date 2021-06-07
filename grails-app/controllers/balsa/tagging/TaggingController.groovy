@@ -1,39 +1,24 @@
 package balsa.tagging
 
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import balsa.AbstractBalsaController
 
 @Transactional(readOnly = true)
 @Secured("ROLE_CURATOR")
 class TaggingController extends AbstractBalsaController {
-	
-	static defaultAction = "categories"
-
-    def categories() {
-		params.max = 10
+    def index() {
 		def categoryInstanceList = TagCategory.list(params)
-		[categoryInstanceList: categoryInstanceList, categoryInstanceCount: categoryInstanceList.totalCount]
-	}
-	
-	def category(TagCategory categoryInstance) {
-		if (notFound(categoryInstance)) return
-		
-		[categoryInstance: categoryInstance]
-	}
-	
-	def createCategory() {
-		[categoryInstance: new TagCategory(params)]
+		[categoryInstanceList: categoryInstanceList, openCategory: params.openCategory]
 	}
 	
 	@Transactional
 	def saveCategory(TagCategory categoryInstance) {
 		if (notFound(categoryInstance)) return
-		if (hasErrors(categoryInstance, 'createCategory', 'categoryInstance')) return
 		
 		categoryInstance.save flush:true
 
-		redirect action: 'category', id: categoryInstance.id
+		redirect action: 'index'
 	}
 	
 	@Transactional
@@ -42,57 +27,28 @@ class TaggingController extends AbstractBalsaController {
 		
 		categoryInstance.delete flush:true
 
-		redirect action: 'categories'
+		redirect action: 'index'
 	}
 	
 	@Transactional
-	def updateOptions(TagCategory categoryInstance) {
-		if (notFound(categoryInstance)) return
-		
-		categoryInstance.options = params.options.split("\r\n")
-		categoryInstance.save flush:true
-		
-		redirect action: 'category', id: categoryInstance.id
-	}
-	
-	@Transactional
-	def updateDescription(TagCategory categoryInstance) {
+	def updateCategory() {
+		TagCategory categoryInstance = TagCategory.get(params.id)
 		if (notFound(categoryInstance)) return
 		
 		categoryInstance.description = params.description
+		categoryInstance.searchType = params.searchType
+		categoryInstance.options = params.options.split("\\r\\n")
+		categoryInstance.handles.collect().each { 
+			categoryInstance.removeFromHandles(it)
+			it.delete(flush: true)
+		}
+		params.list('handle').each {
+			categoryInstance.addToHandles(new TagHandle(it))
+		}
+		
 		categoryInstance.save flush:true
 		
-		redirect action: 'category', id: categoryInstance.id
-	}
-	
-	@Transactional
-	def changeType(TagCategory categoryInstance) {
-		if (notFound(categoryInstance)) return
-		def searchType = params.searchType as TagCategory.SearchType
-		categoryInstance.searchType = searchType
-		
-		render(status: 200)
-	}
-	
-	@Transactional
-	def addHandle() {
-		def handleInstance = new TagHandle(params)
-		if (hasErrors(handleInstance.category, 'category', 'categoryInstance')) return
-		
-		def categoryId = handleInstance.category.id
-		handleInstance.save flush:true
-		
-		redirect action: 'category', id: categoryId
-	}
-	
-	@Transactional
-	def deleteHandle(TagHandle handleInstance) {
-		if (notFound(handleInstance)) return
-		
-		def categoryId = handleInstance.category.id
-		handleInstance.delete flush:true
-		
-		redirect action: 'category', id: categoryId
+		render 'Save successful.'
 	}
 	
 	@Secured(['permitAll'])

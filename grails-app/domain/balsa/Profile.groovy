@@ -18,7 +18,7 @@ class Profile {
 		fullname size: 5..200, blank: true, nullable: true
 		citednames blank: true, nullable: true
 		emailAddress blank: true, nullable: true, email: true
-		phone black: true, nullable: true, phoneNumber: true
+		phone black: true, nullable: true
     }
 	
 	static mapping = {

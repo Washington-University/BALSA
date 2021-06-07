@@ -5,6 +5,7 @@ import balsa.Download
 import balsa.TagScanner
 import balsa.file.FileMetadata
 import balsa.file.SceneFile
+import balsa.security.BalsaUser
 
 class Scene {
 	String id
@@ -20,11 +21,12 @@ class Scene {
 	static hasMany = [downloads: Download]
 	static hasOne = [preview: ScenePreview]
     static constraints = {
-		shortName size: 5..100, blank: true, nullable: true
+		shortName size: 1..100, blank: true, nullable: true
 		description blank: true, nullable: true
 	}
 	static mapping = {
 		id generator: "balsa.BalsaIdGenerator"
+		sceneFile lazy: false
 		name type: "text", index: 'scene_name_index'
 		shortName type: "text", index: 'scene_shortname_index'
 		description type: "text", index: 'scene_desc_index'

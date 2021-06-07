@@ -3,29 +3,50 @@ package balsa
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.plugin.springsecurity.ui.strategy.MailStrategy
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 import java.util.zip.ZipFile
 
 import balsa.file.Documentation
 import balsa.file.FileMetadata
 import balsa.file.SceneFile
+import balsa.scene.SceneLine
+import balsa.security.BalsaUser
 
 import com.apploi.Hashids
 
 @Secured(['ROLE_ADMIN'])
 @Transactional
-class TestController {
+class TestController extends AbstractBalsaController {
 	def twitter4jService
-	def fileService
-	def springSecurityService
-	def statsService
-	def grailsApplication
 	MailStrategy uiMailStrategy
 	
 	static UploadHandler handler
 	
     def index() { }
+	
+	@Secured(['ROLE_USER'])
+	def user() {
+		render userService.current
+	}
+	
+	def configValue() {
+		render grailsApplication.config.recaptcha.secret
+	}
+	
+	def recaptcha() {
+		[siteKey: recaptchaService.siteKey]
+	}
+	
+	def verify() {
+		render recaptchaService.verifyAnswer(session, params)
+	}
+	
+	def scene() {
+		def id = 'XPNr'
+		def scene = SceneLine.get(id)
+		render scene
+	}
 	
 	def idTest() {
 		render BalsaIdGenerator.hashids.encode(params.id.toInteger())
@@ -132,5 +153,9 @@ class TestController {
 	
 	def environment() {
 		render grails.util.Environment.current.name
+	}
+	
+	def notFound() {
+		render(status: 404)
 	}
 }

@@ -6,10 +6,11 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['ROLE_ADMIN'])
 class UserController extends grails.plugin.springsecurity.ui.UserController {
 	def springSecurityService
+	def userService
 	
 	@Secured('ROLE_USER')
 	def current() {
-		render springSecurityService.currentUser as JSON
+		render userService.current as JSON
 	}
 	
 	@Secured('ROLE_USER')

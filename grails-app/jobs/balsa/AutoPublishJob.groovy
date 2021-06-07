@@ -2,7 +2,8 @@ package balsa
 
 import grails.util.Environment
 import groovy.time.TimeCategory
-import twitter4j.*
+import twitter4j.StatusUpdate
+import grails.gorm.transactions.Transactional
 
 class AutoPublishJob {
 	def twitter4jService
@@ -11,11 +12,12 @@ class AutoPublishJob {
 		simple repeatInterval: 60000, repeatCount: -1
     }
 
+	@Transactional
     def execute() {
 		def now = new Date()
 		def approvedVersions = Version.findAllByStatus(Version.Status.APPROVED)
 		approvedVersions.each { approvedVersion -> 
-			if (approvedVersion.isReference() || (approvedVersion.actualReleaseDate() && approvedVersion.actualReleaseDate() < now)) {
+			if (approvedVersion.isReference() || (approvedVersion.releaseDate && approvedVersion.releaseDate < now)) {
 				Dataset versionDataset = approvedVersion.dataset
 				
 				// if there is already a public version that matches preprint status, this is considered an update, and the prior version becomes nonpublic
@@ -38,10 +40,10 @@ class AutoPublishJob {
 					def message = newOrUpdated + preprint + term + ' dataset released on BALSA: ' + title + '\nView it here: https://balsa.wustl.edu/' + term + '/' + versionDataset.id
 					
 					StatusUpdate status = new StatusUpdate(message)
-					def preview = approvedVersion.safeFocusScene()?.preview
-					if (preview) {
-						status.setMedia(approvedVersion.id + '.' + preview.imageFormat, new ByteArrayInputStream(preview.image))
-					}
+//					def preview = approvedVersion.safeFocusScene()?.preview
+//					if (preview) {
+//						status.setMedia(approvedVersion.id + '.' + preview.imageFormat, new ByteArrayInputStream(preview.image))
+//					}
 					if (Environment.current == Environment.PRODUCTION) {
 						twitter4jService.updateStatus(status)
 					}

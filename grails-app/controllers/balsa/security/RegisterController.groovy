@@ -6,7 +6,7 @@ import grails.plugin.springsecurity.ui.ForgotPasswordCommand
 import grails.plugin.springsecurity.ui.RegisterCommand
 import grails.plugin.springsecurity.ui.RegistrationCode
 import grails.plugin.springsecurity.ui.ResetPasswordCommand
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 
 import javax.naming.NameNotFoundException
 
@@ -23,6 +23,7 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 	def ldapUsernameMapper
 	def springSecurityService
 	def recaptchaService
+	def userService
 	
 	def userAlreadyExists() {
 		render balsaUserDetailsService.userExists(params.username)
@@ -36,12 +37,8 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 			return [registerCommand: new RegisterCommand()]
 		}
 		
-//		if (!recaptchaService.verifyAnswer(session, request.getRemoteAddr(), params)) {
-//			registerCommand.errors.reject('', 'Your reCAPTCHA answer was incorrect')
-//		}
-		
-		if (registerCommand.username.contains('@')) {
-			registerCommand.errors.reject('username', 'Usernames may not contain @ symbols')
+		if (!recaptchaService.verifyAnswer(session, params)) {
+			registerCommand.errors.reject('', 'Your reCAPTCHA answer was incorrect')
 		}
 		
 		/* check LDAP for existing user with same username
@@ -69,7 +66,7 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 		
 		springSecurityService.reauthenticate(registerCommand.username, registerCommand.password)
 		
-		redirect controller: 'profile', action: 'edit'
+		redirect uri: '/'
 	}
 	
 	@Transactional
@@ -145,7 +142,7 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 	
 	@Secured("ROLE_USER")
 	def changePassword() {
-		String username = springSecurityService.getCurrentUser().username
+		String username = userService.current.username
 
 		balsaUserDetailsService.changePassword(username, params.newPassword)
 		
@@ -182,7 +179,7 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 	@Secured("ROLE_USER")
 	def delete()
 	{
-		BalsaUser balsaUser = springSecurityService.currentUser
+		BalsaUser balsaUser = userService.current
 		def username = balsaUser.username
 		
 		UserRole.where({user==balsaUser}).deleteAll()
