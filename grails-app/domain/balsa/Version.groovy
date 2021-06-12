@@ -47,7 +47,7 @@ class Version {
 	Date journalDate
 	@BindingFormat('MM/dd/yyyy h:mm a')
 	Date releaseDate
-	DateRedirect dateRedirect
+	DateRedirect dateRedirect = DateRedirect.CUSTOM
 	
 	static hasMany = [files: FileMetadata, institutions:Institution, linkedScenes: SceneLine]
 	static belongsTo = [Dataset]

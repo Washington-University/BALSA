@@ -84,7 +84,7 @@
 									</div>
 									<div class="col-3">
 										<div class="form-group ${hasErrors(bean: datasetInstance, field: 'releaseDate', 'error')}">
-											<label for="releaseDate">Custom Date</label>
+											<label for="releaseDate">Release Date</label>
 											<div id="releaseDatePicker" class="input-group">
 												<input class="form-control datetimepicker" type="text" name="releaseDate" value="${versionInstance.releaseDate?.format('MM/dd/yyyy h:mm a')}"/>
 											</div>
