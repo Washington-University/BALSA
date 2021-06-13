@@ -1,1 +1,0 @@
-<g:select class="form-control searchRefresh" id="categoryOptions" name="${category.name}" from="${category.options}" noSelection="${['': 'Select ' + category.name]}"/>

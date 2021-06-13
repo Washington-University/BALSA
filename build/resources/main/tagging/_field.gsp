@@ -1,1 +1,0 @@
-<g:textField class="form-control searchRefreshText" style="width:100%" name="${category.name}"  />

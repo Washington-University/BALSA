@@ -6,3 +6,5 @@ BALSA-0.1.war
 *.bin
 .assCache
 .mainClass
+.sass-cache/*
+build/*
