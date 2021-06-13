@@ -1,0 +1,8 @@
+.DS_Store
+BALSA-0.1.war
+*.class
+*.data
+*.lock
+*.bin
+.assCache
+.mainClass
