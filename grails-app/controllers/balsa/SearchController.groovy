@@ -11,13 +11,13 @@ class SearchController extends AbstractBalsaController {
 	def datasetSearch() {
 		def searchResults = searchService.datasetSearch(params)
 		
-		render(template: "datasetSearchResults", model:[searchResults:searchResults])
+		render(status: 200, template: "datasetSearchResults", model:[searchResults:searchResults])
 	}
 	
 	def sceneSearch() {
 		def searchResults = searchService.sceneSearch(params)
 		
-		render(template: "sceneSearchResults", model:[searchResults:searchResults])
+		render(status: 200, template: "sceneSearchResults", model:[searchResults:searchResults])
 	}
 	
 	def searchFilter() {

@@ -231,11 +231,9 @@ function ajaxSubmitForm(event) {
 	event.preventDefault();
 	
 	var form = $(event.target);
-	var url = form.attr('action');
-	
 	$.ajax({
-		type: "POST",
-		url: url,
+		method: "POST",
+		url: window.location.origin + form.attr('action'),
 		data: form.serialize(),
 		success: function(data) {
 			eval(form.data('success'));
@@ -737,9 +735,6 @@ $('#termsModal').on('hidden.bs.modal', function(e) {if (agreementChanged) {locat
 
 
 
-
-
-
 // login modal
 $('#loginModal').on('shown.bs.modal', function () {
 	$('#username').focus();
@@ -764,20 +759,23 @@ $('#keyword').keydown(function() {
 });
 
 function refreshSearchResults() {
-	searchStartTime = Date.now();
-	jQuery.ajax({type:'POST',
-		data:jQuery('#searchForm').serialize(), 
+	$.ajax({
+		method:'POST',
 		url:'search/datasetSearch',
-		success:function(data,textStatus){
+		data:$('#searchForm').serialize(), 
+		success:function(data){
 			$('#datasetSearchResults').html(data);
 			populateCarousel();
 		},
-		error:function(XMLHttpRequest,textStatus,errorThrown){}});
-	jQuery.ajax({type:'POST',
-		data:jQuery('#searchForm').serialize(), 
+		error:function(request, status, error){}});
+	$.ajax({
+		method:'POST',
 		url:'search/sceneSearch',
-		success:function(data,textStatus){$('#sceneSearchResults').html(data);},
-		error:function(XMLHttpRequest,textStatus,errorThrown){}});
+		data:$('#searchForm').serialize(), 
+		success:function(data){
+			$('#sceneSearchResults').html(data);
+		},
+		error:function(request, status, error){}});
 	return false;
 }
 
@@ -840,7 +838,6 @@ function populateCarousel() {
 
 function populateCarouselContents(versionId, thumbnailSize) {
 	$.ajax({
-		type:'GET',
 		url:'search/carouselContents/' + versionId + '?ts=' + thumbnailSize,
 		success:function(data,textStatus){$('#innerCarousel' + versionId).html(data); loadSlideImage(versionId); changeSceneFileVisibility();},
 		error:function(XMLHttpRequest,textStatus,errorThrown){}

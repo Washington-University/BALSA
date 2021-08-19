@@ -38,8 +38,12 @@ management:
     endpoints:
         enabled-by-default: false
 
+server:
+    use-forward-headers: true
 ---
 grails:
+    cors:
+        enabled: true
     mime:
         disable:
             accept:

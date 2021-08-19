@@ -124,4 +124,7 @@ assets {
 	minifyJs = true
 	minifyCss = true
 	includes = ["fonts/*"]
+	minifyOptions = [
+		optimizationLevel: 'WHITESPACE_ONLY'
+	]
 }
