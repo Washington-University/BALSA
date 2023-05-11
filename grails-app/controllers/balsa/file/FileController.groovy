@@ -1,13 +1,14 @@
 package balsa.file
 
+
 import static org.springframework.http.HttpStatus.*
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
 import balsa.AbstractBalsaController
-import balsa.Dataset
 import balsa.Study
 import balsa.Version
-import balsa.tagging.TagCategory
+import balsa.file.nifti.Nifti
+import balsa.file.nifti.cifti.Cifti
 
 @Transactional(readOnly = true)
 @Secured("@balsaSecurityService.canEdit(#this, 'file')")
@@ -29,6 +30,14 @@ class FileController extends AbstractBalsaController {
 		def view = "/file/show"
 		if (file instanceof SceneFile) { // scene files have their own details screen with special requirements
 			redirect controller: 'sceneFile', action: 'show', id: file.id, params: params.version
+		}
+		
+		if (file instanceof Nifti) { // new display information for nifti files
+			view = "/nifti/show"
+		}
+		
+		if (file instanceof Cifti) { // new display information for nifti files
+			view = "/cifti/show"
 		}
 		
         render (view: view, model:[file: file, versionId: params.version])

@@ -19,13 +19,7 @@ class Dataset {
 	String id
 	String title
 	String shortTitle
-	@Deprecated
-	String description
 	String extract
-	@Deprecated
-	String[] sceneFileOrder = []
-	@Deprecated
-	Status status = Status.EDITABLE
 	SceneLine focusScene
 	Date createdDate = new Date()
 	Date publicDate
@@ -42,15 +36,13 @@ class Dataset {
 	static constraints = {
 		title size: 5..200, blank: false
 		shortTitle size: 5..100, blank: true, nullable: true
-		description nullable: true, blank: true
 		extract size: 0..50, blank: true, nullable: true
 		focusScene nullable: true
-		sceneFileOrder nullable: true
 		curator nullable: true
 		notes nullable: true, blank: true
 		readNotes nullable: true, blank: true
-		customTermsTitle blank: true, nullable: true
-		customTermsContent blank: true, nullable: true
+		customTermsTitle size: 5..200, blank: true, nullable: true
+		customTermsContent size: 10..100000, blank: true, nullable: true
 		publicDate nullable: true
 	}
 	static mapping = {
@@ -58,18 +50,11 @@ class Dataset {
 		id generator: "balsa.BalsaIdGenerator"
 		title type: "text", index: 'dataset_title_index'
 		shortTitle type: "text", index: 'dataset_shorttitle_index'
-		description type: "text"
 		extract type: "text"
-		sceneFileOrder type:ArrayType, params: [type: String]
 		notes type: "text"
 		readNotes type: "text"
 		customTermsTitle type: "text"
 		customTermsContent type: "text"
-	}
-
-	@Deprecated
-	Set<FileMetadata> currentFiles() {
-		files.findAll({ it.removed == null }).toSet()
 	}
 	
 	Version getVersion(String versionInfo) {
@@ -111,11 +96,6 @@ class Dataset {
 		else {
 			publicVersion() ?: preprintVersion()
 		}
-	}
-
-	@Deprecated
-	enum Status {
-		EDITABLE, SUBMITTED, APPROVED, PUBLIC, EMERGENCY
 	}
 	
 	boolean isPublic(versionInfo = null) {

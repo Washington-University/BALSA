@@ -1,5 +1,6 @@
 package balsa
 
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
 import grails.util.Environment
@@ -43,20 +44,19 @@ class ContactController extends AbstractBalsaController {
 			render(status: 418)
 			return
 		}
-		
-		
-			def contents = params.contents?.replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('\n','<br>')
-			def emailAddress = params.emailAddress ?: userService.current?.profile?.emailAddress
-			def emailClause = emailAddress ? ('<br><br>Replies should be sent to <a href="mailto:' +
-					emailAddress.replaceAll('<','&lt;').replaceAll('>','&gt;') + '">' +
-					emailAddress.replaceAll('<','&lt;').replaceAll('>','&gt;') + '</a>') : ''
-			
-			mailService.sendMail {
-				to  grailsApplication.config.balsa.curatorContacts
-				from 'noreply@balsa.wustl.edu'
-				subject 'BALSA Message: ' + params.subject
-				html userService.current.username + ' sent the following message to the BALSA curators:<br><br>"' + contents + '"' + emailClause
-			}
+
+		def contents = params.contents?.replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('\n','<br>')
+		def emailAddress = params.emailAddress ?: userService.current?.profile?.emailAddress
+		def emailClause = emailAddress ? ('<br><br>Replies should be sent to <a href="mailto:' +
+				emailAddress.replaceAll('<','&lt;').replaceAll('>','&gt;') + '">' +
+				emailAddress.replaceAll('<','&lt;').replaceAll('>','&gt;') + '</a>') : ''
+
+		mailService.sendMail {
+			to  grailsApplication.config.balsa.curatorContacts
+			from 'noreply@balsa.wustl.edu'
+			subject 'BALSA Message: ' + params.subject
+			html userService.current.username + ' sent the following message to the BALSA curators:<br><br>"' + contents + '"' + emailClause
+		}
 		
 		render(status: 200)
 	}

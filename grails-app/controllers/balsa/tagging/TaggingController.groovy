@@ -1,5 +1,6 @@
 package balsa.tagging
 
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
 import balsa.AbstractBalsaController

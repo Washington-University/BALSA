@@ -3,6 +3,8 @@ package balsa.file.nifti.cifti
 import net.kaleidos.hibernate.usertype.JsonbMapType
 import balsa.TagScanner
 import balsa.file.nifti.Nifti
+import javax.xml.stream.XMLInputFactory
+import javax.xml.stream.XMLStreamReader
 
 class Cifti extends Nifti {
 	String ciftiVersion
@@ -28,49 +30,104 @@ class Cifti extends Nifti {
 	
 	def setValuesFromFile(InputStream input) {
 		super.setValuesFromFile(input)
-
-		def ciftiFile = xmlSlurper().parseText(extractCiftiXml(input))
 		
-		ciftiVersion = ciftiFile.@Version
+		advanceToBracket(input)
 		
-		for (md in ciftiFile.Matrix.MetaData?.MD) {
-			if (md.Name.text() == 'Provenance') {
-				provenance = md.Value.text()
+		XMLInputFactory f = XMLInputFactory.newInstance()
+		XMLStreamReader r = f.createXMLStreamReader(input)
+		
+		while (r.hasNext()) {
+			r.next()
+			if (r.isStartElement() && r.getLocalName() == 'CIFTI') {
+				ciftiVersion = r.getAttributeValue('','Version')
 			}
-		}
-		
-		def maps = [:]
-		for (mim in ciftiFile.Matrix.MatrixIndicesMap) {
-			for (nm in mim.NamedMap) {
-				def mapName = nm.MapName.text()
-				def labelTable = []
-				for (label in nm.LabelTable.Label) {
-					labelTable.add(label.text())
+			if (r.isEndElement() && r.getLocalName() == 'CIFTI') {
+				break
+			}
+			
+			if (r.isStartElement() && r.getLocalName() == 'MD') {
+				def name
+				def value
+				while (r.hasNext()) {
+					r.next()
+					if (r.isStartElement() && r.getLocalName() == 'Name') {
+						r.next()
+						if (r.hasText()) name = r.getText()
+					}
+					if (r.isStartElement() && r.getLocalName() == 'Value') {
+						r.next()
+						if (r.hasText()) value = r.getText()
+					}
+					if (r.isEndElement() && r.getLocalName() == 'MD') {
+						break
+					}
 				}
-				maps.put(mapName, labelTable)
+				if (name && value) {
+					switch(name) {
+						case 'Provenance':
+							provenance = value
+							break
+						case 'ParentProvenance':
+							parentProvenance = value
+							break
+						case 'ProgramProvenance':
+							programProvenance = value
+					}
+				}
+			}
+			
+			if (r.isStartElement() && r.getLocalName() == 'MapName') {
+				r.next()
+				def mapName = r.hasText() ? r.getText() : null
+				def labelTable = []
+				while (r.hasNext()) {
+					r.next()
+					if (r.isStartElement() && r.getLocalName() == 'Label') {
+						r.next()
+						if (r.hasText()) labelTable.add(r.getText())
+					}
+					if (r.isEndElement() && r.getLocalName() == 'LabelTable') {
+						break
+					}
+					if (r.isEndElement() && r.getLocalName() == 'NamedMap') {
+						break
+					}
+				}
+				if (mapName && labelTable) {
+					if (!namedMaps) namedMaps = [:]
+					namedMaps.put(mapName, labelTable)
+				}
 			}
 		}
-		namedMaps = maps
-		
-		return ciftiFile
 	}
 	
 	String extractCiftiXml(InputStream input) {
 		String concat = ""
-		while (!(concat.contains('<CIFTI') && concat.contains('</CIFTI>')) && concat.length() < 52428800) { // capping string length at 10 MB in case of wrong file type
+		while (!(concat.contains('<CIFTI') && concat.contains('</CIFTI>')) && concat.length() < 52428800) { // capping string length at 50 MB in case of wrong file type
 			byte[] b = new byte[20000]
 			input.read(b)
 			concat += new String(b)
 		}
-		if (!(concat.contains('<CIFTI') && concat.contains('</CIFTI>'))) {
-			throw new Exception("Could not isolate CIFTI XML header.")
+		if (concat.contains('<CIFTI') && concat.contains('</CIFTI>')) {
+			
+			int beginIndex = concat.indexOf('<CIFTI')
+			int endIndex = concat.indexOf('</CIFTI>', beginIndex) + 8
+			String xml = concat.substring(beginIndex, endIndex)
+
+			xml.replaceAll("[\\000]+", "") // if the chunks read by the input stream don't align properly with the chunks of the stored data, extra null 0x0 characters will be inserted and need to be removed
+			return xml
 		}
-		int beginIndex = concat.indexOf('<CIFTI')
-		int endIndex = concat.indexOf('</CIFTI>', beginIndex) + 8
-		String xml = concat.substring(beginIndex, endIndex)
-		
-		xml.replaceAll("[\\000]+", "") // if the chunks read by the input stream don't align properly with the chunks of the stored data, extra null 0x0 characters will be inserted and need to be removed
-		xml
+	}
+	
+	def advanceToBracket(input) {
+		while (true) {
+			input.mark(2)
+			def nextByte = input.read()
+			if (nextByte == 60) {
+				input.reset()
+				break
+			}
+		}
 	}
 	
 	def scanForTags() { // should be able to call super.scanForTags, but weird error happens where object considers itself to be its own super object; no idea why or how to fix

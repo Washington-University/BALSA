@@ -1,5 +1,7 @@
 package balsa.security
 
+import grails.async.Promise
+import grails.async.Promises
 import grails.plugin.springsecurity.annotation.Secured
 import grails.plugin.springsecurity.ui.CommandObject
 import grails.plugin.springsecurity.ui.ForgotPasswordCommand
@@ -19,18 +21,24 @@ import balsa.Profile
 @Transactional(readOnly = true)
 @Secured(['permitAll'])
 class RegisterController extends grails.plugin.springsecurity.ui.RegisterController {
-	def balsaUserDetailsService
-	def ldapUsernameMapper
 	def springSecurityService
 	def recaptchaService
 	def userService
-	
-	def userAlreadyExists() {
-		render balsaUserDetailsService.userExists(params.username)
+
+	def test() {
+		Promise asyncEmail = Promises.task {
+			Thread.sleep(10000)
+			uiMailStrategy.sendVerifyRegistrationMail(
+					to: 'john.smith@wustl.edu',
+					from: 'noreply@balsa.wustl.edu',
+					subject: 'BALSA Username',
+					html: '<p>Your <a href="http://balsa.wustl.edu">BALSA</a> username is <b>PLEASE</b></p>.')
+		}
+		asyncEmail.onComplete() {}
+		render "success?"
 	}
-	
+
 	@Transactional
-	@Override // altered to create ldap user object as well as BalsaUser
 	def register(RegisterCommand registerCommand) {
 		
 		if (!request.post) {
@@ -40,12 +48,8 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 		if (!recaptchaService.verifyAnswer(session, params)) {
 			registerCommand.errors.reject('', 'Your reCAPTCHA answer was incorrect')
 		}
-		
-		/* check LDAP for existing user with same username
-		 * existing constraints will have already checked against the database, so don't re-check if
-		 * a user with that name is already in the database or it will double up on errors
-		 */
-		if (!BalsaUser.findByUsername(registerCommand.username) && balsaUserDetailsService.userExists(registerCommand.username)) {
+
+		if (BalsaUser.findByUsername(registerCommand.username)) {
 			registerCommand.errors.rejectValue('username', 'registerCommand.username.unique')
 		}
 		
@@ -54,16 +58,23 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 		}
 		
 		// create the local user object that will have a profile and so forth
-		def user = BalsaUser.newInstance(username: registerCommand.username, accountLocked: false, enabled: true, profile: new Profile(emailAddress: registerCommand.email)).save()
+		def user = BalsaUser.newInstance(username: registerCommand.username, password: springSecurityService.encodePassword(registerCommand.password), accountLocked: false, enabled: true, profile: new Profile(emailAddress: registerCommand.email)).save()
 		UserRole.create(user, Role.findByAuthority('ROLE_USER'), true) // give new user basic access by default
-		
-		// create the basic user object in ldap
-		balsaUserDetailsService.createUser(new User(registerCommand.username, registerCommand.password, new ArrayList<GrantedAuthority>()))
-		
-		RegistrationCode registrationCode = new RegistrationCode(username: registerCommand.username).save()
-		
-		sendVerifyRegistrationMail registrationCode, user, registerCommand.email
-		
+
+		def body = registerEmailBody
+		if (body.contains('$')) {
+			body = evaluate(body, [user: user])
+		}
+
+		Promise asyncEmail = Promises.task {
+			uiMailStrategy.sendVerifyRegistrationMail(
+					to: registerCommand.email,
+					from: registerEmailFrom,
+					subject: registerEmailSubject,
+					html: body)
+		}
+		asyncEmail.onComplete() {}
+
 		springSecurityService.reauthenticate(registerCommand.username, registerCommand.password)
 		
 		redirect uri: '/'
@@ -72,6 +83,11 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 	@Transactional
 	@Override // altered to correctly access email via user's profile
 	def forgotPassword(ForgotPasswordCommand forgotPasswordCommand) {
+		if (!recaptchaService.verifyAnswer(session, params)) {
+			render(status: 418)
+			return
+		}
+
 		if (!request.post) {
 			return [forgotPasswordCommand: new ForgotPasswordCommand()]
 		}
@@ -107,9 +123,8 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 		}
 		[emailSent: true, forgotPasswordCommand: forgotPasswordCommand]
 	}
-	
-	
-	@Override // altered to change password in ldap rather than BalsaUser object
+
+	@Transactional
 	def resetPassword(ResetPasswordCommand resetPasswordCommand) {
 		String token = params.t
 
@@ -129,9 +144,10 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 		if (resetPasswordCommand.hasErrors()) {
 			return [token: token, resetPasswordCommand: resetPasswordCommand]
 		}
-		
-		balsaUserDetailsService.changePassword(resetPasswordCommand.username, resetPasswordCommand.password)
-		
+
+		def user = uiRegistrationCodeStrategy.resetPassword(resetPasswordCommand, registrationCode)
+		if (user.hasErrors()) {}
+
 		registrationCode.delete()
 		springSecurityService.reauthenticate registrationCode.username
 
@@ -141,15 +157,19 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 	}
 	
 	@Secured("ROLE_USER")
+	@Transactional
 	def changePassword() {
-		String username = userService.current.username
-
-		balsaUserDetailsService.changePassword(username, params.newPassword)
-		
+		BalsaUser user = userService.current
+		user.password = springSecurityService.encodePassword(params.newPassword)
+		user.save()
 		render(status: 200)
 	}
 	
 	def forgotUsername(ForgotUsernameCommand forgotUsernameCommand) {
+		if (!recaptchaService.verifyAnswer(session, params)) {
+			render(status: 418)
+			return
+		}
 
 		if (!request.post) {
 			return [forgotUsernameCommand: new ForgotUsernameCommand()]
@@ -190,13 +210,6 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 			it.removeFromBalsaUser(balsaUser)
 		}
 		balsaUser.delete(flush: true)
-		
-		try {
-			balsaUserDetailsService.deleteUser(username)
-		}
-		catch(NameNotFoundException e) {
-			// almost certainly indicates an HCP user, whose LDAP account we can't delete
-		}
 		
 		request.logout()
 		

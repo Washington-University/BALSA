@@ -1,10 +1,10 @@
 package balsa
 
-import static org.springframework.http.HttpStatus.*
+import balsa.file.Documentation
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
-
+import grails.web.Action
 import org.apache.commons.lang.ArrayUtils
 
 import balsa.authorityControl.Institution
@@ -120,7 +120,16 @@ class StudyController extends AbstractDatasetController {
 		versionInstance.comments = params.comments
 		versionInstance.focusScene = SceneLine.get(params.focusScene)?.dataset == studyInstance ? SceneLine.get(params.focusScene) : null
 		versionInstance.sceneFileOrder = ArrayUtils.removeElement(params.sceneFileOrder.split(","), "")
-		
+		List visibleDocList = ensureList(params.visibleDocs)
+		for (Documentation doc in versionInstance.documentation()) {
+			if (visibleDocList.contains(doc.id)) {
+				doc.visible = true
+			}
+			else {
+				doc.visible = false
+			}
+		}
+
 		versionInstance.studyAbstract = params.studyAbstract
 		versionInstance.doi = params.doi
 		versionInstance.pmid = params.pmid
@@ -244,7 +253,41 @@ class StudyController extends AbstractDatasetController {
 		if(data.getClass().isArray()) return data
 		[data]
 	}
-	
+
+	@Transactional
+	@Secured("@balsaSecurityService.canEdit(#this, 'dataset')")
+	def tokenOn(Study studyInstance) {
+		if (notFound(studyInstance)) return
+
+		def generator = new BalsaIdGenerator()
+		studyInstance.viewToken = generator.generate(null, null)
+		studyInstance.save()
+
+		render studyInstance.viewToken
+	}
+
+	@Transactional
+	@Secured("@balsaSecurityService.canEdit(#this, 'dataset')")
+	def tokenOff(Study studyInstance) {
+		if (notFound(studyInstance)) return
+
+		studyInstance.viewToken = null
+		studyInstance.save()
+	}
+
+	@Transactional
+	@Secured("ROLE_USER")
+	def view(Study studyInstance) {
+		if (notFound(studyInstance)) return
+
+		def token = params.token
+
+		if (token && studyInstance.viewToken && token == studyInstance.viewToken) {
+			studyInstance.addToViewers(userService.current)
+		}
+
+		redirect action: 'show', id: studyInstance.id
+	}
 	
 	@Transactional
 	@Secured("@balsaSecurityService.canEdit(#this, 'dataset')")

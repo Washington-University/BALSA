@@ -15,5 +15,6 @@
 //= require bootstrap.bundle
 //= require bootbox.all
 //= require bootstrap-datetimepicker
+//= require chartjs
 //= require balsaUI
 //= require_self

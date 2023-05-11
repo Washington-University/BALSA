@@ -76,8 +76,14 @@
 			</table>
 		</div>
 	</div>
-	<div style="margin-top:5px;margin-left:9px;margin-bottom:-10px">
-		<input type="checkbox" class="indeterminate-checkbox" name="documentation" checked dependencies="${versionInstance.documentation().id.join(',')}"/>&nbsp;&nbsp;
-		<label for="documentation" style="margin-bottom:0px">Include all documentation files?</label>
+	<div>
+		<div style="float:left; padding-left:0.75rem">
+			<input type="checkbox" class="indeterminate-checkbox" name="documentation" checked dependencies="${versionInstance.documentation().id.join(',')}"/>&nbsp;&nbsp;
+			<label for="documentation" style="margin-bottom:0px">Include all documentation files?</label>
+		</div>
+		<div style="float:right; padding-right:0.75rem">
+			<input type="checkbox" name="suffix" checked />&nbsp;&nbsp;
+			<label for="suffix" style="margin-bottom:0px">Include study and version ID suffix?</label>
+		</div>
 	</div>
 </form>

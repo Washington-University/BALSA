@@ -1,6 +1,6 @@
 package balsa
 
-import static org.springframework.http.HttpStatus.*
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
 
@@ -17,7 +17,11 @@ class SceneController extends AbstractBalsaController {
 	
 	@Secured("(@balsaSecurityService.canView(#this, 'sceneLine') || @balsaSecurityService.isPublic(#this, 'sceneLine'))")
 	def show(SceneLine sceneLineInstance) {
+		if (notFound(sceneLineInstance)) return
+		
 		Scene sceneInstance = sceneLineInstance.sceneForVersion(params.version)
+		
+		if (notFound(sceneInstance)) return
 		
 		[sceneInstance: sceneInstance, dependencies: sceneInstance.dependencies(params.version)]
 	}

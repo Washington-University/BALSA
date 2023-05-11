@@ -8,6 +8,7 @@ grails:
     codegen:
         defaultPackage: balsa
     gorm:
+        autowire: true
         reactor:
             # Whether to translate GORM events into Reactor events
             # Disabled by default for performance reasons
@@ -98,6 +99,13 @@ grails:
         twitterbootstrap:
             fixtaglib: true
         springsecurity:
+            password:
+                algorithm: bcrypt
+            providerNames: ['daoAuthenticationProvider','rememberMeAuthenticationProvider']
+            apf:
+                filterProcessesUrl: '/j_spring_security_check'
+                usernameParameter: 'j_username'
+                passwordParameter: 'j_password'
             sch:
                 strategyName: MODE_INHERITABLETHREADLOCAL
             userLookup:
@@ -136,39 +144,21 @@ grails:
                 ajaxLoginFormUrl: /login/_auth
 
             rememberMe:
+                parameter: '_spring_security_remember_me'
                 persistent: true
                 persistentToken:
                     domainClassName: balsa.PersistentLogin
-
-            ldap:
-                # search.base and rememberMe.usernameMapper.userDnBase must be identical
-                # authorities.groupSearchBase and rememberMe.detailsManager.groupSearchBase must be identical
-                search:
-                    filter: '(CN={0})'
-                authorities:
-                    groupSearchFilter: 'member={0}'
-                    retrieveDatabaseRoles: false
-                    retrieveGroupRoles: true
-                    ignorePartialResultException: true
-                useRememberMe: true
-                rememberMe:
-                    usernameMapper:
-                        usernameAttribute: CN
-                    detailsManager:
-                        groupMemberAttributeName: member
-                mapper:
-#                    userDetailsClass: BalsaUserDetails
-                    passwordAttributeName: 'unicodePwd'
             ui:
+                encodePassword: true
                 register:
                     emailFrom: 'noreply@balsa.wustl.edu'
                     emailSubject: 'Welcome to BALSA'
-                    emailBody: '<p>You have successfully registered. Please take a moment to add detail to your <a href="http://balsa.wustl.edu/profile/edit/$user.profile.id">profile</a>.</p><p>Have questions about BALSA? Go <a href="http://balsa.wustl.edu/about">here</a>.</p>'
+                    emailBody: '<p>You have successfully registered. Please take a moment to add detail to your <a href="http://balsa.wustl.edu/profile/edit/$user.profile.id">profile</a>.</p><p>Have questions about BALSA? Go <a href="http://balsa.wustl.edu/about">here</a>.</p><p>The BALSA Team</p>'
                     defaultRoleNames: ['ROLE_USER']
                 forgotPassword:
                     emailFrom: 'noreply@balsa.wustl.edu'
-                    emailSubject: 'BALSA Password Reset'
-                    emailBody: '<p>Follow <a href=$url>this link</a> to reset your password.</p>'
+                    emailSubject: 'BALSA Password Reset Request'
+                    emailBody: '<p>We received a request to reset your balsa.wustl.edu password.  If you requested this, <a href=$url>click here</a> to reset it.</p><p>If you were not expecting this email, please ignore it.</p><p>The BALSA Team</p>'
                 forgotUsername:
                     emailFrom: 'noreply@balsa.wustl.edu'
                     emailSubject: 'BALSA Username'

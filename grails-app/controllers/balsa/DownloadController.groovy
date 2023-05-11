@@ -1,5 +1,6 @@
 package balsa
 
+import balsa.file.Documentation
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
 import balsa.file.FileMetadata
@@ -44,7 +45,9 @@ class DownloadController extends AbstractBalsaController {
 		for (sceneId in params.list('scene')) {
 			scenes.add(Scene.get(sceneId))
 		}
-		
+
+		def useSuffix = params.suffix == 'on'
+
 		def totalSize = 0
 		
 		// verify that all files/scenes are within requested version, if not render status 403
@@ -89,7 +92,7 @@ class DownloadController extends AbstractBalsaController {
 			scene.addToDownloads(download)
 		}
 		
-		fileService.downloadZip(versionInstance.extractDirectory(), files, partialSceneFiles, response)
+		fileService.downloadZip(versionInstance.extractDirectory(useSuffix), files, partialSceneFiles, response)
 		
 		render(status: 200)
 	}
@@ -101,10 +104,16 @@ class DownloadController extends AbstractBalsaController {
 		file.addToDownloads(new Download(date: new Date(), username: userService.current?.username, ipAddress: request.getRemoteAddr(), totalSize: file.filesize, dataset: file.dataset))
 		fileService.downloadFile(file, response)
 	}
-	
+
+	@Secured("(@balsaSecurityService.canView(#this, 'file') || @balsaSecurityService.isPublic(#this, 'file')) && @balsaSecurityService.hasAccess(#this, 'file')")
+	def downloadDoc(Documentation file) {
+		if (notFound(file)) return
+		fileService.downloadFile(file, response, file.mime)
+	}
+
 	@Secured('ROLE_CURATOR')
 	def stats() {
-		[downloadStats: statsService.getDownloadStats(100, null)]
+		[downloadStats: statsService.getDownloadStats(200, null)]
 	}
 	
 	@Secured('permitAll')

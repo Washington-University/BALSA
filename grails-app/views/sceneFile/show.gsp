@@ -100,7 +100,12 @@
 						<ul>
 							<g:each in="${file.scenesSorted()}" var="scene">
 							<li>
+								<g:if test="${versionId}">
+								<g:link controller="scene" action="show" id="${scene.sceneLine.id}" params="[version: versionId]">${scene.name?.encodeAsHTML()}</g:link>
+								</g:if>
+								<g:else>
 								<g:link controller="scene" action="show" id="${scene.sceneLine.id}">${scene.name?.encodeAsHTML()}</g:link>
+								</g:else>
 								<g:if test="${scene.canView()}">
 								(Index: ${scene.index}, ID: ${scene.sceneLine.id})
 								</g:if>

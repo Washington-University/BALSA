@@ -10,7 +10,6 @@ import javax.xml.stream.XMLStreamReader
 import net.kaleidos.hibernate.usertype.ArrayType
 import balsa.BalsaIdGenerator
 import balsa.TagScanner
-import balsa.Version
 import balsa.exceptions.BalsaException
 import balsa.scene.Scene
 import balsa.scene.SceneLine
@@ -37,7 +36,8 @@ class SceneFile extends FileMetadata {
 			def allSpecFilesList = [] as Set
 			def allSupportingFilesList = [] as Set
 			
-			XMLInputFactory f = XMLInputFactory.newInstance();
+			XMLInputFactory f = XMLInputFactory.newInstance()
+			f.setProperty(XMLInputFactory.IS_COALESCING, true)
 			XMLStreamReader r = f.createXMLStreamReader(inputStream)
 			while (r.hasNext()) {
 				r.next()

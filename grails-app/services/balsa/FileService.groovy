@@ -119,31 +119,31 @@ class FileService {
 				if (file.getName().endsWith(".zip")) {
 					ZipFile zip = new ZipFile(file)
 					for (ZipEntry entry in zip.entries()) {
-						if (!entry.isDirectory()) {							
-//							if (dataset.extract == null || dataset.extract == "") { // for now we are overwriting existing extract directory names
-								dataset.extract = baseDirectoryName(entry.getName())
-//							}
-							def fileData = uploadToDatabase(zip.getInputStream(entry), zip.getInputStream(entry), entry.getSize())
-							def filepath = standardizeFilepath(entry.getName())
-							def filesize = entry.getSize()
-							def zipsize = entry.getCompressedSize()
+						if (!entry.isDirectory()) {					
 							
+							def filepath = standardizeFilepath(entry.getName())
 							if (filepath.endsWith('.DS_Store')) {
 								break
 							}
 							
+							dataset.extract = baseDirectoryName(entry.getName())
+							def fileData = uploadToDatabase(zip.getInputStream(entry), zip.getInputStream(entry), entry.getSize())
+							def filesize = entry.getSize()
+							def zipsize = entry.getCompressedSize()
+							
+							
 							def newFile
 							try {
-								newFile = create(fileData, filepath, filesize, zipsize, dataset)
+								newFile = create(fileData.id, fileData.data, filepath, filesize, zipsize, dataset)
 							}
 							catch (ValidationException e) {
-								newFile = createError(fileData, filepath, dataset, "Processing failed to set all required values or required values missing from file.", e.getStackTrace().toString())
+								newFile = createError(fileData.id, filepath, dataset, "Processing failed to set all required values or required values missing from file.", e.getStackTrace().toString())
 							}
 							catch (BalsaException b) {
-								newFile = createError(fileData, filepath, dataset, b.message, b.getStackTrace().toString())
+								newFile = createError(fileData.id, filepath, dataset, b.message, b.getStackTrace().toString())
 							}
 							catch (Exception e) {
-								newFile = createError(fileData, filepath, dataset, "An error occured during processing.", e.getStackTrace().toString())
+								newFile = createError(fileData.id, filepath, dataset, "An error occured during processing.", e.getStackTrace().toString())
 							}
 							dataset.addToFiles(newFile)
 							dataset.save(failOnError: true)
@@ -155,29 +155,28 @@ class FileService {
 				}
 				else {
 					if (!file.isDirectory()) {
-						def inputStream1 = file.newInputStream();
-						def inputStream2 = file.newInputStream();
-						def fileData = uploadToDatabase(inputStream1, inputStream2, file.length())
-						inputStream1.close()
-						inputStream2.close()
-						
 						def filename = file.getName()
-						def filesize = file.length()
-						def zipsize = file.length()
-						
 						if (!filename.endsWith('.DS_Store')) {
+							def inputStream1 = file.newInputStream();
+							def inputStream2 = file.newInputStream();
+							def fileData = uploadToDatabase(inputStream1, inputStream2, file.length())
+							inputStream1.close()
+							inputStream2.close()
+							def filesize = file.length()
+							def zipsize = file.length()
+
 							def newFile
 							try {
-								newFile = create(fileData, filename, filesize, zipsize, dataset)
+								newFile = create(fileData.id, fileData.data, filename, filesize, zipsize, dataset)
 							}
 							catch (ValidationException e) {
-								newFile = createError(fileData, filename, dataset, "Processing failed to set all required values or required values missing from file.", e.getStackTrace().toString())
+								newFile = createError(fileData.id, filename, dataset, "Processing failed to set all required values or required values missing from file.", e.getStackTrace().toString())
 							}
 							catch (BalsaException b) {
-								newFile = createError(fileData, filename, dataset, b.message, b.getStackTrace().toString())
+								newFile = createError(fileData.id, filename, dataset, b.message, b.getStackTrace().toString())
 							}
 							catch (Exception e) {
-								newFile = createError(fileData, filename, dataset, "An error occured during processing.", e.getStackTrace().toString())
+								newFile = createError(fileData.id, filename, dataset, "An error occured during processing.", e.getStackTrace().toString())
 							}
 							dataset.addToFiles(newFile)
 							dataset.save(failOnError: true)
@@ -206,21 +205,22 @@ class FileService {
 		filepath.substring(0, filepath.indexOf("/"))
 	}
 	
-	public FileMetadata create(FileData fileData, String filepath, long filesize, long zipsize, Dataset dataset) {
-		def existingFile = filepathAlreadyExists(filepath, dataset)
-		if (existingFile?.fileDataId == fileData.id && !(existingFile instanceof FileError)) {
+	public FileMetadata create(fileDataId, fileDataData, filepath, filesize, zipsize, dataset) {
+		def existingFile = dataset.files.find { it.fileDataId == fileDataId && it.filepath == filepath }
+		if (existingFile && !(existingFile instanceof FileError)) {
 			return existingFile
 		}
+		
 		def file = newFile(filepath)
 		file.dataset = dataset
 		file.filename = filepath.substring(filepath.lastIndexOf("/") + 1) // last section of file path
 		file.filepath = filepath
-		file.fileDataId = fileData.id
+		file.fileDataId = fileDataId
 		file.filesize = filesize
 		file.zipsize = zipsize
 		file.createdBy = userService.current.username // if I try to update a scene rather than replace it, this line throws a transient object error, lord knows why
 		file.added = new Date()
-		InputStream input = getLOM().open(fileData.data).getInputStream()
+		InputStream input = getLOM().open(fileDataData).getInputStream()
 		try {
 			file.setValuesFromFile(input)
 		}
@@ -238,20 +238,12 @@ class FileService {
 		file
 	}
 	
-	private FileMetadata filepathAlreadyExists(String filepath, Dataset dataset) {
-		for (existingFile in dataset.files) { // two different loops to avoid ConcurrentModificationException
-			if (existingFile.filepath == filepath) {
-				return existingFile
-			}
-		}
-	}
-	
-	public FileError createError(FileData fileData, String filepath, Dataset dataset, String message, String stacktrace) {
+	public FileError createError(String fileDataId, String filepath, Dataset dataset, String message, String stacktrace) {
 		def error = new FileError()
 		error.dataset = dataset
 		error.filename = filepath.substring(filepath.lastIndexOf("/") + 1) // last section of file path
 		error.filepath = filepath.substring(filepath.indexOf("/") + 1) // remove the enclosing folder name
-		error.fileDataId = fileData.id
+		error.fileDataId = fileDataId
 		error.filesize = 0
 		error.zipsize = 0
 		error.message = message

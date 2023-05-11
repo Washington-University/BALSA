@@ -23,7 +23,7 @@ class SceneLine {
 	boolean isPublic(versionInfo = null) {
 		if (versionInfo) {
 			def datVersion = dataset.getVersion(versionInfo)
-			datVersion && datVersion?.isPublic() && sceneForVersion(datVersion)
+			datVersion && datVersion?.isPublic() && sceneForVersion(versionInfo)
 		}
 		else {
 			sceneForVersion('public') || sceneForVersion('preprint')

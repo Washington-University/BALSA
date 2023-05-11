@@ -15,7 +15,10 @@
 				<div class="btn-group btn-bar">
 					<g:render template="/templates/buttons" bean="${file}" var="item" />
 					<g:link class="btn btn-light" action="allScenes" resource="${file}">See all scenes using this file</g:link>
-					<g:link class="btn btn-light" controller="download" action="downloadFile" id="${file.id}">Download file</g:link>
+					<g:if test="${file.hasAccess()}">
+						<g:link class="btn btn-light" controller="download" action="downloadFile" id="${file.id}">Download File</g:link>
+					</g:if>
+
 
 					<g:if test="${file?.canEdit()}">
 					<button type="button" class="btn btn-light" onclick="bootbox.confirm({size: 'small', message: 'Remove this file?<g:if test="${file?.isPublic()}"> Removing a file creates a new working version of the dataset, but the file will remain in the current public version.</g:if>', 
@@ -56,6 +59,8 @@
 						<span class="attributeLabel">SIZE:</span><br>
 						${displaySize('bytes':file.filesize)}
 					</p>
+
+					<g:render template="/templates/fileInfo" />
 
 					<p>
 						<span class="attributeLabel">TAGS:</span><br>

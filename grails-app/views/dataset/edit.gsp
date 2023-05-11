@@ -1,8 +1,6 @@
 <%@ page import="balsa.Dataset" %>
 <%@ page import="balsa.Study" %>
 <%@ page import="balsa.scene.SceneLine" %>
-<%@ page import="balsa.Dataset.Status" %>
-<%@ page import="balsa.Study.DateRedirect" %>
 <%@ page import="balsa.security.Terms" %>
 <%@ page import="balsa.security.Approval" %>
 <%@ page import="balsa.authorityControl.Institution" %>
@@ -54,16 +52,16 @@
 								<div class="row">
 									<div class="col-9">
 										<div class="form-group ${hasErrors(bean: datasetInstance, field: 'title', 'error')}">
-											<label for="name">Title</label>
-											<g:field class="form-control" type="text" name="title" value="${datasetInstance.title}" maxlength="200" />
+											<label for="title">Title</label>
+											<g:field class="form-control" type="text" name="title" id="title" value="${datasetInstance.title}" maxlength="200" />
 										</div>
 										<div class="row">
 											<div class="col-8">
 												<div class="form-group ${hasErrors(bean: datasetInstance, field: 'shortTitle', 'error')}">
-													<label for="name" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Optional: Enter a shortened version of your study title to display on home and study pages">
+													<label for="shortTitle" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Optional: Enter a shortened version of your study title to display on home and study pages">
 														Display Title<span class="text-info ml-2 glyphicon glyphicon-info-sign"></span>
 													</label>
-													<g:field class="form-control" type="text" name="shortTitle" value="${datasetInstance.shortTitle}" maxlength="100" />
+													<g:field class="form-control" type="text" name="shortTitle" id="shortTitle" value="${datasetInstance.shortTitle}" maxlength="100" />
 												</div>
 											</div>
 											<div class="col-3 pr-0">
@@ -71,20 +69,20 @@
 													<label for="extract" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="The extraction directory is the name of the directory a user will see when they extract the contents of a zip file of your study data. You can customize the first part of this directory name, but it will always conclude with your study ID as a suffix to ensure your study data stays separate from other downloaded and extracted studies.">
 														Extraction Directory Prefix<span class="text-info ml-2 glyphicon glyphicon-info-sign"></span>
 													</label>
-													<g:field class="form-control prefix-field" type="text" name="extract" value="${datasetInstance.extract}" maxlength="50" />
+													<g:field class="form-control prefix-field" type="text" name="extract" id="extract" value="${datasetInstance.extract}" maxlength="50" />
 												</div>
 											</div>
 											<div class="col-1 pl-0">
 												<div class="form-group">
-													<label for="extract">Suffix</label>
-													<input class="form-control suffix-field" type="text" placeholder="_${datasetInstance.id}" readonly>
+													<label for="extractSuffix">Suffix</label>
+													<input class="form-control suffix-field" type="text" id="extractSuffix" placeholder="_${datasetInstance.id}" readonly>
 												</div>
 											</div>
 										</div>
 									</div>
 									<div class="col-3">
-										<div class="form-group ${hasErrors(bean: datasetInstance, field: 'releaseDate', 'error')}">
-											<label for="releaseDate">Release Date</label>
+										<div class="form-group">
+											<label for="releaseDatePicker">Release Date</label>
 											<div id="releaseDatePicker" class="input-group">
 												<input class="form-control datetimepicker" type="text" name="releaseDate" value="${versionInstance.releaseDate?.format('MM/dd/yyyy h:mm a')}"/>
 											</div>
@@ -125,7 +123,7 @@
 							<div role="tabpanel" class="tab-pane round-tab-pane" id="publication">
 								<div class="row">
 									<div class="col-3">
-										<div class="form-group ${hasErrors(bean: datasetInstance, field: 'pmid', 'error')}">
+										<div class="form-group">
 											<label for="pmid">PMID</label>
 											<div class="row">
 												<div class="col">
@@ -141,14 +139,14 @@
 											</div>
 										</div>
 
-										<div class="form-group ${hasErrors(bean: datasetInstance, field: 'doi', 'error')}">
+										<div class="form-group">
 											<label for="doi">DOI</label>
 											<g:field class="form-control" type="text" name="doi" value="${versionInstance.doi}" id="doi"/>
 										</div>
 
 										<div class="form-group">
 											<label for="preprint" class="mr-5">Preprint</label>
-											<div class="pt-2">
+											<div>
 												<g:checkBox name="preprint" value="${versionInstance.preprint}" /><span class="ml-3 text-secondary">Check this box to mark this as a preprint version.</span>
 											</div>
 										</div>
@@ -163,7 +161,7 @@
 											</div>
 											<div class="col-6">
 												<div class="form-group">
-													<label for="epubDate">Search for Journals</label>
+													<label for="publicationSearch">Search for Journals</label>
 													<g:field class="form-control mb-2" type="text" id="publicationSearch" name="publicationSearch" autocomplete="off" onkeyup="searchPublications()"/>
 													<g:select class="form-control mb-2" multiple="true" id="publicationSearchResults" name="publicationSearchResults" from="${(Publication.list()*.officialName).sort()}" />
 													<button type="button" class="btn btn-light" onclick="setPublication()">
@@ -182,7 +180,7 @@
 											</div>
 											<div class="col-6">
 												<div class="form-group">
-													<label for="epubDate">Search for Institutions</label>
+													<label for="institutionSearch">Search for Institutions</label>
 													<g:field class="form-control mb-2" type="text" id="institutionSearch" name="institutionSearch" autocomplete="off" onkeyup="searchInstitutions()"/>
 													<g:select class="form-control mb-2" id="institutionSearchResults" name="institutionSearchResults" from="${(Institution.list()*.canonicalName).sort()}" multiple="true"/>
 													<button type="button" class="btn btn-light" onclick="addToInstitutions()">
@@ -194,8 +192,8 @@
 										</div>
 									</div>
 									<div class="col-3">
-										<div class="form-group mb-0 ${hasErrors(bean: datasetInstance, field: 'authors', 'error')}">
-											<label for="datasetAbstract">Authors (one per line)</label>
+										<div class="form-group mb-0">
+											<label for="authors">Authors (one per line)</label>
 											<span class="float-right text-secondary">shift-enter for new line</span>
 											<textarea class="form-control static" rows="25" name="authors" id="authors"><g:join in="${versionInstance.authors}" delimiter="\r\n"/></textarea>
 										</div>
@@ -208,68 +206,90 @@
 							<div role="tabpanel" class="tab-pane round-tab-pane" id="ownership">
 								<g:if test="${datasetInstance instanceof Study}">
 								<div class="row">
-									<div class="form-group float-left col-4 ${hasErrors(bean: datasetInstance, field: 'owners', 'error')}">
+									<div class="form-group col-4 ${hasErrors(bean: datasetInstance, field: 'owners', 'error')}">
 										<label data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Owners are users who have ownership rights to your study data in BALSA, generally your co-authors. They may access the edit page, upload data, and handle submission of the study. By default your username will already be listed here. Note that owners you add will still need to agree to the Data Submission Terms before they have these permissions. They are added by their usernames, which means they must already have an account in BALSA (or have logged into BALSA at least once if they are using an HCP account).">
 											Owners (one per line)<span class="text-info ml-2 glyphicon glyphicon-info-sign"></span>
 										</label>
-										<textarea class="form-control static" id="ownerNames" name="ownerNames" rows="11"><g:join in="${datasetInstance.owners*.username.sort()}" delimiter="\r\n"/></textarea>
-									</div>
-									<div class="form-group float-left col-4">
-										<label for="searchTerm">Search Users by Name or Email</label><br>
-										<div>
-											<input class="form-control" type="text" id="search_text" name="search_text" autocomplete="off" onkeyup="userSearch()"/>
-										</div>
-										<span style="color:gray">control-click to unselect or select multiple</span>
-										<select class="form-control h-50 mb-2" rows="7" id="usernames" name="usernames" multiple></select>
-										<button class="btn btn-light float-left" type="button" onclick="addToOwners()"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;&nbsp;Add Selected</button>
-										<button class="btn btn-light float-right" type="button" onclick="addToViewers()">Add Selected&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+										<textarea class="form-control static" id="ownerNames" name="ownerNames" rows="15"><g:join in="${datasetInstance.owners*.username.sort()}" delimiter="\r\n"/></textarea>
 									</div>
 
-									<div class="form-group float-left col-4 ${hasErrors(bean: datasetInstance, field: 'viewer', 'error')}">
+									<div class="col-4">
+										<div class="form-group">
+											<label for="search_text">Search Users by Name or Email</label>
+											<input class="form-control" type="text" id="search_text" name="search_text" autocomplete="off" onkeyup="userSearch()"/>
+											<span style="color:gray">control-click to unselect or select multiple</span>
+											<select class="form-control mb-2" size="7" id="usernames" name="usernames" multiple></select>
+											<div class="row">
+												<div class="col-6">
+													<button class="btn btn-light float-left" type="button" onclick="addToOwners()"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;&nbsp;Add Selected</button>
+												</div>
+
+												<div class="col-6">
+													<button class="btn btn-light float-right" type="button" onclick="addToViewers()">Add Selected&nbsp;&nbsp;<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="viewToken" class="mr-5">Shareable Viewer Link</label>
+											<div>
+												<g:checkBox name="viewToken" value="${datasetInstance.viewToken}" onclick="toggleToken('${datasetInstance.id}')" /><span class="ml-3 text-secondary">Check this box to enable users to become viewers via shared link.</span>
+											</div>
+											<div class="pt-2">
+												<input id="viewLink" class="form-control" type="text" readonly value="${datasetInstance.viewToken ? createLink(absolute:true,action:'view',controller:'study',id:datasetInstance.id) + '?token=' + datasetInstance.viewToken : 'disabled'}" onclick="copyLinkToClipboard()"
+													   data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Click to copy link to clipboard.">
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group col-4 ${hasErrors(bean: datasetInstance, field: 'viewer', 'error')}">
 										<label data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Viewers are users who you would like to be able to view and download study data prior to that data being made publically available, allowing for reviewers. They are added by their usernames, which means they must already have an account in BALSA (or have logged into BALSA at least once if they are using an HCP account).">
 											Viewers (one per line)<span class="text-info ml-2 glyphicon glyphicon-info-sign"></span>
 										</label>
-										<textarea class="form-control static" id="viewerNames" name="viewerNames" rows="11"><g:join in="${datasetInstance.viewers*.username.sort()}" delimiter="\r\n"/></textarea>
+										<textarea class="form-control static" id="viewerNames" name="viewerNames" rows="15"><g:join in="${datasetInstance.viewers*.username.sort()}" delimiter="\r\n"/></textarea>
 									</div>
 								</div>
 								</g:if>
-								<div class="form-group ${hasErrors(bean: datasetInstance, field: 'accessAgreement', 'error')} ">
-									<label data-toggle="popover" data-trigger="hover" data-placement="right" data-content="You may select (or create with the New Data Access Terms section below) a set of terms to which a user must agree before they download your study data.">
-										Data Access Terms<span class="text-info ml-2 glyphicon glyphicon-info-sign"></span>
-									</label>
-									<div class="card">
-										<div class="card-body" style="padding-top:12px;padding-bottom:3px">
-											<g:each in="${Terms.findAllByTitleNotEqual('Terms and Conditions for Uploading Data to the Washington University (WU) BALSA Database')}" var="terms">
-											<div class="checkbox" style="margin-top:0">
-												<label>
-													<input type="checkbox" id="accessAgreements" name="accessAgreements" value="${terms.id}" <g:if test="${datasetInstance.accessAgreements.contains(terms)}">checked</g:if>>
-													<span style="padding-right:5px">${terms.title}</span>
+								<div class="row">
+									<div class="col-8 mb-0 form-group ${hasErrors(bean: datasetInstance, field: 'accessAgreement', 'error')} ">
+										<label data-toggle="popover" data-trigger="hover" data-placement="right" data-content="You may select (or create with the New Data Access Terms section below) a set of terms to which a user must agree before they download your study data.">
+											Data Access Terms<span class="text-info ml-2 glyphicon glyphicon-info-sign"></span>
+										</label>
+										<div class="card">
+											<div class="card-body" style="padding-top:12px;padding-bottom:3px">
+												<g:each in="${Terms.findAllByTitleNotEqual('Terms and Conditions for Uploading Data to the Washington University (WU) BALSA Database')}" var="terms">
+													<div class="checkbox" style="margin-top:0">
+														<label>
+															<input type="checkbox" id="accessAgreements" name="accessAgreements" value="${terms.id}" <g:if test="${datasetInstance.accessAgreements.contains(terms)}">checked</g:if>>
+															<span style="padding-right:5px">${terms.title}</span>
 
-												</label>
-												<a data-toggle="modal" data-target="#${terms.id}TermsModal">preview</a>
-												<div id="${terms.id}TermsModal" class="modal fade" role="dialog">
-													<div class="modal-dialog modal-wide">
-														<div class="modal-content">
-															<div class="modal-header">
-																<h4 class="modal-title">${terms.title}</h4>
-																<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-															</div>
-															<div class="modal-body">
-																<g:encodeAs codec="PreserveWhitespace">${terms.contents}</g:encodeAs>
+														</label>
+														<a data-toggle="modal" data-target="#TermsModal${terms.id}">preview</a>
+														<div id="TermsModal${terms.id}" class="modal fade" role="dialog">
+															<div class="modal-dialog modal-wide">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h4 class="modal-title">${terms.title}</h4>
+																		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+																	</div>
+																	<div class="modal-body">
+																		<g:encodeAs codec="PreserveWhitespace">${terms.contents}</g:encodeAs>
+																	</div>
+																</div>
 															</div>
 														</div>
 													</div>
-												</div>
+												</g:each>
 											</div>
-											</g:each>
 										</div>
 									</div>
+
+									<div class="form-group col-4 mb-0">
+										<label>New Data Access Terms</label>
+										<div id="customTermsTitleDisplay" style="margin-bottom:11px">${datasetInstance.customTermsTitle ?: 'No new terms'}</div>
+										<button type="button" class="btn btn-light" data-toggle="modal" data-target="#customTermsModal">Add/Edit New DAT</button>
+									</div>
 								</div>
-								<div class="form-group mb-0">
-									<label>New Data Access Terms</label>
-									<div id="customTermsTitleDisplay" style="margin-bottom:11px">${datasetInstance.customTermsTitle ?: 'No new terms'}</div>
-									<button type="button" class="btn btn-light" data-toggle="modal" data-target="#customTermsModal">Add/Edit New DAT</button>
-								</div>
+
 							</div>
 
 							
@@ -282,7 +302,7 @@
 											</label>
 											<span class="float-right text-secondary">drag and drop boxes to change order</span>
 											<input type=hidden id="sceneFileOrder" name="sceneFileOrder" />
-											<div style="height:37.4em">
+											<div style="max-height: 418px; overflow-y: auto;">
 												<g:if test="${versionInstance.sceneFiles().size() == 0}">
 												No scene files yet
 												</g:if>
@@ -297,6 +317,24 @@
 												</ul>
 											</div>
 										</div>
+										<div class="form-group mb-0">
+											<label data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Here you can decide which documentation files will be displayed as links on your study page.">
+												Documentation File Visibility<span class="text-info ml-2 glyphicon glyphicon-info-sign"></span>
+											</label>
+											<div class="pt-2">
+												<g:if test="${versionInstance.documentation().size() == 0}">
+												No documentation files yet
+												</g:if>
+												<g:each in="${versionInstance.documentation()}" var="docFile">
+													<div class="checkbox d-inline mr-4">
+														<label>
+															<input type="checkbox" id="visibleDocs" name="visibleDocs" value="${docFile.id}" <g:if test="${docFile.visible}">checked</g:if>>
+															<span>${docFile.filename}</span>
+														</label>
+													</div>
+												</g:each>
+											</div>
+										</div>
 									</div>
 									<div class="col-5">
 										<div class="form-group mb-0 ${hasErrors(bean: datasetInstance, field: 'focusScene', 'error')} " >
@@ -306,7 +344,7 @@
 											<div>
 												<div id="focusScenePreview" class="scalingBox mb-3" style="width:621.25px;height:490px;">
 													<g:if test="${versionInstance.focusScene}">
-													<img src="/scene/image/${versionInstance.focusScene().id}"/>
+													<img src="/scene/image/${versionInstance.safeFocusScene().id}"/>
 													</g:if>
 												</div>
 												<select class="form-control" id="focusScene" name="focusScene" onchange="changeFocusScene()">
@@ -329,7 +367,7 @@
 										<div class="modal-body">
 											<div class="form-group">
 												<label for="username" class="control-label">Title</label>
-												<g:field class="form-control" type="text" id="customTermsTitle" name="customTermsTitle" value="${datasetInstance.customTermsTitle}" />
+												<g:field class="form-control" type="text" id="customTermsTitle" name="customTermsTitle" value="${datasetInstance.customTermsTitle}" maxlength="200"/>
 											</div>
 											<div class="form-group" style="margin-bottom:0">
 												<label for="password" class="control-label">Contents</label>

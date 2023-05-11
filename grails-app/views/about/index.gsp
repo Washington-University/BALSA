@@ -64,7 +64,7 @@
 					</p>
 					<h4>Get started!</h4>
 					<p>
-						<g:link controller="register" action="register">Register</g:link> for a BALSA account, or use an existing <a href="https://db.humanconnectome.org">ConnectomeDB</a> account to log in. 
+						<g:link controller="register" action="register">Register</g:link> for a BALSA account.
 					</p>
 					<p>
 						To create a study or submit data to BALSA, you must log in to your BALSA account and agree to <g:link controller="terms" action="submission">terms to become a BALSA submitter</g:link>. 

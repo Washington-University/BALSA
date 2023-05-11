@@ -78,7 +78,6 @@ dependencies {
 	testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
 	
 	compile 'org.grails.plugins:spring-security-core:4.0.3'
-	compile 'org.grails.plugins:spring-security-ldap:4.0.0.M1'
 	compile 'org.grails.plugins:spring-security-ui:4.0.0.M1'
 	
 	compile 'org.grails.plugins:postgresql-extensions:7.0.0'
@@ -127,4 +126,8 @@ assets {
 	minifyOptions = [
 		optimizationLevel: 'WHITESPACE_ONLY'
 	]
+}
+
+war {
+	enabled = true
 }

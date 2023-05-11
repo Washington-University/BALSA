@@ -1,4 +1,5 @@
 // stuff to do on page load
+let chart = require('chart.js');
 
 window.onload = function() {
 	$('.tablesorter.filterer').each(function(index, value) {
@@ -88,9 +89,6 @@ window.onload = function() {
 	if ($('#downloadStatsModal').length) {
 		$.get("/" + $('#datasetTermField').val() + "/downloadStats/" + $('#datasetIdField').val(), function(data, status){
 			$('#downloadStatsModalContents').html(data);
-			
-			tablesorterInit($('#mostDownloadedScenesTable'));
-			pagerInit($('#mostDownloadedScenesTable'));
 		});
 	}
 	
@@ -559,6 +557,44 @@ function customTermsOkay() {
 	}
 }
 
+function toggleToken(studyId) {
+	if ($('#viewToken').prop("checked")) {
+		$.ajax({
+			url: window.location.origin + '/study/tokenOn/' + studyId,
+			success: function(data) {
+				$('#viewLink').val(window.location.origin + '/study/view/' + studyId + '?token=' + data);
+				updateRecentActivity();
+			},
+			error: function(request, status, error) {
+				updateRecentActivity();
+			}
+		});
+	}
+	else {
+		$.ajax({
+			url: window.location.origin + '/study/tokenOff/' + studyId,
+			success: function(data) {
+				$('#viewLink').val('disabled');
+				updateRecentActivity();
+			},
+			error: function(request, status, error) {
+				updateRecentActivity();
+			}
+		});
+	}
+}
+
+function copyLinkToClipboard() {
+	let link = $('#viewLink').val();
+	if (link && link != 'disabled') {
+		navigator.clipboard.writeText(link).then(
+			function() {
+				bootbox.alert('Link copied to clipboard.');
+			}
+		);
+	}
+}
+
 function successfulSave(data) {
 	bootbox.alert(data);
 }
@@ -718,11 +754,6 @@ function agree(id) {
 	$('#button'+id).attr('disabled','disabled');
 	$('#button'+id).html('<span class="text-success font-weight-bold">&#10003;</span> Agreed');
 }
-function displayError(status) {
-	if (status === 409) {
-		$('#cdbErrorModal').modal('toggle');
-	}
-}
 function checkTermsReload() {
 	if ($('.terms-title .text-danger').length === 0) {
 		location.reload();
@@ -746,10 +777,41 @@ function isLoggedIn(data) {
 	}
 	else if (data.error) {
 		$('#loginError').slideDown(500);
-		$('#loginErrorLabel').text(data.error);
+		//$('#loginErrorLabel').text(data.error);
 	}
 }
 
+function sendPasswordResetEmailModal() {
+	if ($('#usernameModal').val()) {
+		$.ajax({
+			method: "POST",
+			url: "register/forgotPassword",
+			data: "username="+$('#usernameModal').val(),
+			success: function(data) {
+				$("#loginModalEmailSent").show();
+			}
+		});
+	}
+	else {
+		bootbox.alert('Please enter your username before clicking the link.');
+	}
+}
+
+function sendPasswordResetEmail() {
+	if ($('#j_username').val()) {
+		$.ajax({
+			method: "POST",
+			url: "register/forgotPassword",
+			data: "username="+$('#j_username').val(),
+			success: function(data) {
+				$("#loginEmailSent").show();
+			}
+		});
+	}
+	else {
+		bootbox.alert('Please enter your username before clicking the link.');
+	}
+}
 
 // search functions
 var timeout = null;

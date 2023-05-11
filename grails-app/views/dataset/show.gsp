@@ -13,7 +13,7 @@
 	<body>
 		<div role="main">
 			<g:render template="/templates/terms" bean="${datasetInstance.terms()}" var="terms" />
-			<g:render template="/download/downloadModal" bean="${datasetInstance}" var="item" />
+			<g:render template="/download/downloadModal" bean="${datasetInstance}" var="item" model="['versionId': versionInstance.id]"/>
 			<g:render template="/templates/fileModal" model="['files':versionInstance.files, 'datasetInstance': datasetInstance, 'versionInstance': versionInstance]" />
 			<g:if test="${datasetInstance.canEdit()}">
 				<g:render template="/templates/notesModal" bean="${datasetInstance}" var="dataset" />
@@ -119,7 +119,7 @@
 						</g:if>
 						<div class="dropdown mt-2">
 							<button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">All Versions</button>
-							<div class="dropdown-menu">
+							<div class="dropdown-menu" style="overflow-y:auto; max-height:200px">
 								<g:each in="${datasetInstance.versions.sort {a,b-> b.updatedDate<=>a.updatedDate}}" var="version">
 									<g:link class="dropdown-item" controller="${datasetTerm('item':datasetInstance)}" action="show" id="${datasetInstance.id}" params="[version: version.id]">
 										${version.status == Version.Status.PUBLIC && version.preprint ? 'PREPRINT' : version.status} - ${version.updatedDate}
@@ -166,54 +166,66 @@
 					</g:if>
 
 					<g:if test="${datasetInstance instanceof Study}">
-					<g:if test="${versionInstance?.studyAbstract}">
-					<p>
-						<span class="attributeLabel">ABSTRACT:</span><br>
-						<span>${versionInstance?.studyAbstract}</span>
-					</p>
-					</g:if>
-
-					<g:if test="${versionInstance?.publication}">
-					<p>
-						<span class="attributeLabel">PUBLICATION:</span><br>
-						<span>${versionInstance?.publication?.officialName.encodeAsHTML()}</span>
-
-						<g:if test="${versionInstance?.doi}">
-							- DOI:
-							<a href="https://doi.org/${versionInstance.doi}" target="_blank"><g:fieldValue bean="${versionInstance}" field="doi"/></a>
+						<g:if test="${versionInstance?.studyAbstract}">
+						<p>
+							<span class="attributeLabel">ABSTRACT:</span><br>
+							<span>${versionInstance?.studyAbstract}</span>
+						</p>
 						</g:if>
-						<g:if test="${versionInstance?.pmid}">
-							- PMID:
-							<a href="https://www.ncbi.nlm.nih.gov/pubmed/${versionInstance.pmid}" target="_blank"><g:fieldValue bean="${versionInstance}" field="pmid"/></a>
+
+						<g:if test="${versionInstance?.publication}">
+						<p>
+							<span class="attributeLabel">PUBLICATION:</span><br>
+							<span>${versionInstance?.publication?.officialName.encodeAsHTML()}</span>
+
+							<g:if test="${versionInstance?.doi}">
+								- DOI:
+								<a href="https://doi.org/${versionInstance.doi}" target="_blank"><g:fieldValue bean="${versionInstance}" field="doi"/></a>
+							</g:if>
+							<g:if test="${versionInstance?.pmid}">
+								- PMID:
+								<a href="https://www.ncbi.nlm.nih.gov/pubmed/${versionInstance.pmid}" target="_blank"><g:fieldValue bean="${versionInstance}" field="pmid"/></a>
+							</g:if>
+						</p>
 						</g:if>
-					</p>
+
+						<g:if test="${versionInstance?.authors}">
+						<div>
+							<span class="attributeLabel">AUTHORS:</span><br>
+								<ul>
+								<g:each in="${versionInstance.authors}">
+								<li>${it}</li>
+								</g:each>
+							</ul>
+						</div>
+						</g:if>
+
+						<g:if test="${versionInstance?.institutions}">
+						<div>
+							<span class="attributeLabel">INSTITUTIONS:</span><br>
+							<ul>
+								<g:each in="${versionInstance.institutions}">
+								<li>${it.canonicalName}</li>
+								</g:each>
+							</ul>
+						</div>
+						</g:if>
 					</g:if>
 
-					<g:if test="${versionInstance?.authors}">
-					<p>
-						<span class="attributeLabel">AUTHORS:</span><br>
-						<ul>
-							<g:each in="${versionInstance.authors}">
-							<li>${it}</li>
-							</g:each>
-						</ul>
-					</p>
-					</g:if>
-
-					<g:if test="${versionInstance?.institutions}">
+					<g:if test="${versionInstance?.visibleDocumentation().size() > 0}">
 					<div>
-						<span class="attributeLabel">INSTITUTIONS:</span><br>
+						<span class="attributeLabel">DOCUMENTATION:</span><br>
 						<ul>
-							<g:each in="${versionInstance.institutions}">
-							<li>${it.canonicalName}</li>
+							<g:each in="${versionInstance.visibleDocumentation()}">
+								<li>
+									<g:link controller="download" action="downloadDoc" id="${it.id}" target="_blank" type="${it.mime}">${it.filename}</g:link>
+								</li>
 							</g:each>
 						</ul>
 					</div>
 					</g:if>
-					</g:if>
 
 					<g:if test="${versionInstance.sceneFiles().size() > 0}">
-					<br>
 					<div>
 						<span class="attributeLabel">SCENE FILES:</span><br>
 						<ul class="mb-0">
@@ -234,14 +246,13 @@
 								<ul>
 									<g:each in="${sceneFile.scenesSorted()}" var="scene">
 									<li>
-										<g:link controller="scene" action="show" id="${scene.sceneLine.id}">${scene.name + (scene.shortName ? ' - ' + scene.shortName : '')}</g:link>
+										<g:link controller="scene" action="show" id="${scene.sceneLine.id}" params="[version: versionInstance.id]">${scene.name + (scene.shortName ? ' - ' + scene.shortName : '')}</g:link>
 										<g:if test="${scene.canView()}">
 										<span class="canedit">(Index: ${scene.index}, ID: ${scene.sceneLine.id})</span>
 										</g:if>
 									</li>
 									</g:each>
 								</ul>
-								<p></p>
 							</li>
 							</g:each>
 						</ul>
@@ -265,7 +276,6 @@
 									</li>
 									</g:each>
 								</ul>
-								<p></p>
 							</li>
 							</g:each>
 						</ul>

@@ -12,17 +12,15 @@
 						<div class="form-group row">
 							<label class="col-3 col-form-label" for="username">Username</label>
 							<div class="col-9">
-								<input name="username" class="form-control"/>
+								<input id="username" name="username" class="form-control"/>
 							</div>
 						</div>
 					</g:form>
-					
-					<span class="font-weight-bold text-danger">Special note for ConnectomeDB users:</span> <br>Please reset forgotten passwords through <a href="https://db.humanconnectome.org/">ConnectomeDB</a>.
 				</div>
 				<div class="modal-footer">
 					<div class="mr-auto text-success"><span <g:if test="${!emailSent}">class="d-none"</g:if>>A password reset email was sent - check your mail!</span></div>
 					<div class="btn-group">
-						<button type="submit" form="resetPasswordForm" class="btn btn-primary">Reset Password</button>
+						<g:recaptcha form="resetPasswordForm" value="Reset Password"/>
 					</div>
 				</div>
 			</div>

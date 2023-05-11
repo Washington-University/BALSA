@@ -119,7 +119,7 @@
 								<div id="tagDisplay" class="card-body tagContainer">
 									<g:each in="${tagCategories}" var="category">
 									<g:each in="${category.options}" var="option">
-									<div class="tagCategory category${category.name.replaceAll(' ', '')} card m-1 <g:if test="${initialTags.contains(category.name + ':' + option)}">d-none</g:if>" data-tagvalue="${category.name + ':' + option}">
+									<div class="tagCategory category${category.name.replaceAll(' ', '')} card m-1 <g:if test="${initialTags?.contains(category.name + ':' + option)}">d-none</g:if>" data-tagvalue="${category.name + ':' + option}">
 										<div class="card-body p-2">
 											<button type="button" class="close float-left mr-2" style="font-size: 1.25rem;" onclick="addTag('${category.name + ':' + option}')">
 												<span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>

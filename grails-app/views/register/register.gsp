@@ -17,10 +17,6 @@
 						</ul>
 						</g:hasErrors>
 					</div>
-
-					<div class="mb-4 w-75">
-						<span class="font-weight-bold">Special note for all <a href="https://db.humanconnectome.org/">ConnectomeDB</a> users:</span><br>BALSA will accept your existing ConnectomeDB login. There's no need to register again.
-					</div>
 					
 					<g:form controller="register" action="register" name="registerForm" autocomplete='off'>
 						<div class="form-group row">

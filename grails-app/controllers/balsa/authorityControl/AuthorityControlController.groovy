@@ -1,11 +1,9 @@
 package balsa.authorityControl
 
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
-import balsa.AbstractBalsaController;
-import balsa.authorityControl.Institution
-import balsa.authorityControl.Publication
-import balsa.tagging.TagCategory
+import balsa.AbstractBalsaController
 
 @Transactional(readOnly = true)
 @Secured("ROLE_CURATOR")

@@ -1,6 +1,6 @@
 package balsa
 
-import static org.springframework.http.HttpStatus.*
+import balsa.file.Documentation
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
@@ -64,7 +64,7 @@ class ReferenceController extends AbstractDatasetController {
 		referenceInstance.customTermsContent = params.customTermsContent
 		
 		referenceInstance.species.collect().each { referenceInstance.removeFromSpecies(it) }
-		List speciesList = params.species + [] ?: [params.species]
+		List speciesList = ensureList(params.species)
 		speciesList.each { speciesId ->
 			referenceInstance.addToSpecies(Species.get(speciesId))
 		}
@@ -80,7 +80,16 @@ class ReferenceController extends AbstractDatasetController {
 		workingVersion.comments = params.comments
 		workingVersion.focusScene = params.focusScene
 		workingVersion.sceneFileOrder = ArrayUtils.removeElement(params.sceneFileOrder.split(","), "")
-		
+		List visibleDocList = ensureList(params.visibleDocs)
+		for (Documentation doc in workingVersion.documentation()) {
+			if (visibleDocList.contains(doc.id)) {
+				doc.visible = true
+			}
+			else {
+				doc.visible = false
+			}
+		}
+
 		render 'Save successful.'
 	}
 
@@ -93,7 +102,12 @@ class ReferenceController extends AbstractDatasetController {
 
 		render view: '/index'
 	}
-	
+
+	List ensureList(data) {
+		if(!data) return []
+		if(data.getClass().isArray()) return data
+		[data]
+	}
 //	protected def emailOwners(Dataset datasetInstance, String message) {
 //		// reference datasets don't have owners
 //	}

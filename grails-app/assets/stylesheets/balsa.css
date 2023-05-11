@@ -93,6 +93,7 @@ body {
 	width:580px;
 	height: 460px;
 	border: 1px solid #6c757d;
+	overflow-x: hidden;
 }
 
 .carousel-thumbnail {
@@ -316,7 +317,7 @@ label {
 	font-weight: normal;
 }
 
-.card-body p:last-of-type {
+.card-body > :last-child {
 	margin-bottom: 0;
 }
 

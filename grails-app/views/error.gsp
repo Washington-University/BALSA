@@ -16,7 +16,7 @@
 					</g:if>
 					<g:else>
 						<p>
-							BALSA has encountered a proble in handling your request.
+							BALSA has encountered a problem in handling your request.
 							If you continue to experience this issue,
 							<a href="#" data-toggle="modal" data-target="#reportIssuesModal">
 								please contact our technical personnel.

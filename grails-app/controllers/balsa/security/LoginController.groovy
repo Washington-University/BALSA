@@ -17,5 +17,7 @@ class LoginController extends grails.plugin.springsecurity.LoginController {
 								   rememberMeParameter: config.rememberMe.parameter]
 	}
 	
-	def keepAlive() {}
+	def keepAlive() {
+		render status: 200
+	}
 }

@@ -8,6 +8,7 @@ import balsa.Download
 import balsa.TagScanner
 import balsa.Version
 import balsa.security.BalsaUser
+import net.kaleidos.hibernate.usertype.JsonMapType
 
 @EqualsAndHashCode
 class FileMetadata {
@@ -22,11 +23,15 @@ class FileMetadata {
 	String[] tags = []
 	long filesize
 	long zipsize
+	Date processed
+	Map fileInfo
 	
 	static belongsTo = [Dataset, Version]
 	static hasMany = [versions: Version, downloads: Download]
     static constraints = {
 		removed nullable: true
+		processed nullable: true
+		fileInfo nullable: true, blank: true
     }
 	
 	static mapping = {
@@ -38,6 +43,7 @@ class FileMetadata {
 		tags type:ArrayType, params: [type: String]
 		fileDataId index: 'file_data_index'
 		downloads joinTable: [name: 'file_metadata_download', key: 'file_metadata_downloads_id']
+		fileInfo type: JsonMapType
 	}
 	
 	def setValuesFromFile(InputStream input) {}
@@ -90,13 +96,7 @@ class FileMetadata {
 	}
 	
 	Version getVersion(String versionInfo) {
-		if (!versionInfo) return defaultVersion()
-		if (versionInfo.equalsIgnoreCase('public')) return publicVersion()
-		if (versionInfo.equalsIgnoreCase('preprint')) return preprintVersion()
-		if (versionInfo.equalsIgnoreCase('working')) return workingVersion()
-		if (versionInfo.equalsIgnoreCase('submitted')) return submittedVersion()
-		if (versionInfo.equalsIgnoreCase('approved')) return approvedVersion()
-		versions.find { it.id == versionInfo }
+		dataset.getVersion(versionInfo)
 	}
 	
 	Version publicVersion() {
@@ -136,5 +136,9 @@ class FileMetadata {
 	
 	def allVersions() {
 		dataset.files.findAll( { it.filepath == this.filepath } ).sort s{ it.lastUsed() } 
+	}
+	
+	public int hashCode() {
+		id ? id.hashCode() : filepath.hashCode()
 	}
 }

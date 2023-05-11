@@ -1,6 +1,6 @@
 package balsa.security
 
-import static org.springframework.http.HttpStatus.*
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
 
@@ -26,6 +26,7 @@ class TermsController extends AbstractBalsaController {
 		BalsaUser user = userService.current
 		try {
 			termsInstance.agree(user)
+			user.save(failOnError: true)
 			render(status: 200)
 		}
 		catch (Exception e) {

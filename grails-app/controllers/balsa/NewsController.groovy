@@ -1,8 +1,8 @@
 package balsa
 
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.gorm.transactions.Transactional
-import balsa.security.BalsaUser
 
 @Transactional(readOnly = true)
 @Secured(['ROLE_CURATOR'])

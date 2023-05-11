@@ -191,7 +191,7 @@
 								article is published.
 							</p>
 							<p>
-								In the <b>Ownership and Access</b> tab, you may set the owner and viewers associated with the dataset by entering individual BALSA or ConnectomeDB (HCP) usernames 
+								In the <b>Ownership and Access</b> tab, you may set the owner and viewers associated with the dataset by entering individual BALSA or usernames
 								(see "Get Started" tab). Owners may upload files to the study and edit metadata in BALSA, viewers are able to view and download your study dataset before public release. 
 								The ability to edit and download enables collaboration with owner colleagues on uploading/editing a shared BALSA dataset submission. The viewer setting allows you to 
 								“preshare” your dataset with select users, such as reviewers.
@@ -312,10 +312,10 @@
 								added to a scene file, they will be assigned new scene_IDs that will be incorporated into the scene file, simply by saving it when prompted during the upload process.
 							</p>
 							<p>
-								Note: For this re-upload process to work seamlessly, the revised scene file’s name and path must not change. Otherwise, the file will be treated as a new (separate) 
-								scene file upload and you will need to delete the old version from your BALSA study. If wb_view (v1.3.2 or higher) detects a mismatch between the Extraction directory 
-								prefix set in wb_view for a scene file about to be uploaded and the Extraction directory prefix currently in the BALSA study, a popup will appear, explaining the issue 
-								and asking you to choose which Extraction Directory Prefix you wish to use.
+								Note: For this re-upload process to work seamlessly, the revised scene file’s name and path must not change. Otherwise, the file will be treated as a new (separate)
+								scene file upload and you will need to delete the old version from your BALSA study. During curation, we often suggest that the scene file be moved to make it easier
+								for users to find it in the directory structure. Moving the file will change the scene file's path causing the potential for duplicate uploads. In this case, first
+								remove the original scene file and its supporting files from BALSA using the Files tab, then upload the updated scene file from its new location.
 							</p>
 						</div>
 						<div role="tabpanel" class="tab-pane round-tab-pane" id="directories">

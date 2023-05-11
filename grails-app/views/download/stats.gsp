@@ -70,18 +70,18 @@
 								<g:each in="${downloadStats.popularScenes}" var="scene">
 								<tr>
 									<td style="width:100px">
-										${scene.downloads.size()}
+										${scene.dc}
 									</td>
 									<td>
-										<span data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img width='250' src='/scene/image/${scene?.id}'/>">
-											<g:link controller="scene" action="show" id="${scene.sceneLine.id}">${scene.shortName ?: scene.name}</g:link>
+										<span data-toggle="popover" data-trigger="hover" data-html="true" data-content="<img width='250' src='/scene/image/${scene.id}'/>">
+											<g:link controller="scene" action="show" id="${scene.scene_line_id}">${scene.short_name ?: scene.name}</g:link>
 										</span>
 									</td>
 									<td>
-										<g:link action="show" controller="sceneFile" id="${scene.sceneFile.id}">${scene.sceneFile.filename}</g:link>
+										<g:link action="show" controller="sceneFile" id="${scene.scene_file_id}">${scene.filename}</g:link>
 									</td>
 									<td>
-										<g:link action="show" controller="${datasetTerm('item':scene)}" id="${scene.sceneFile.dataset.id}">${scene.sceneFile.dataset.shortTitle ?: scene.sceneFile.dataset.title}</g:link>
+										<g:link action="show" controller="${scene.dclass == 'balsa.Study' ? 'study' : 'reference'}" id="${scene.dataset_id}">${scene.short_title ?: scene.title}</g:link>
 									</td>
 								</tr>
 								</g:each>
@@ -89,6 +89,50 @@
 							<g:render template="/templates/tableFooter" model="[cols: 4]" />
 						</table>
 					</p>
+					<p>
+						<span class="attributeLabel">Most Downloaded Files:</span><br>
+						<table id="mostDownloadedFilesTable" class="table table-hover tablesorter table-bordered filterer pager" data-cssfilter='["d-none","form-control","form-control","form-control"]' data-rows="10">
+							<thead>
+							<tr>
+								<th class="border-0 sorter-false">Downloads&nbsp;</th>
+								<th class="border-0 sorter-false">Name&nbsp;</th>
+								<th class="border-0 sorter-false">Dataset&nbsp;</th>
+							</tr>
+							</thead>
+							<tbody>
+							<g:each in="${downloadStats.popularFiles}" var="file">
+								<tr>
+									<td style="width:100px">
+										${file.dc}
+									</td>
+									<td>
+										<g:link controller="file" action="show" id="${file.id}">${file.filename}</g:link>
+									</td>
+									<td>
+										<g:link action="show" controller="${file.dclass == 'balsa.Study' ? 'study' : 'reference'}" id="${file.dataset_id}">${file.short_title ?: file.title}</g:link>
+									</td>
+								</tr>
+							</g:each>
+							</tbody>
+							<g:render template="/templates/tableFooter" model="[cols: 4]" />
+						</table>
+					</p>
+					<p>
+						<span class="attributeLabel">Downloads By Month:</span>
+						<canvas id="downloadChart"></canvas>
+					</p>
+					<script>
+						<g:applyCodec encodeAs="none">
+						let chartdata = ${downloadStats.downloadsByMonth};
+						</g:applyCodec>
+						let downloadChart = new Chart($('#downloadChart')[0].getContext('2d'),
+								{type: 'bar',
+									data: { labels: chartdata.map(row => row.month),
+										datasets: [{data: chartdata.map(row => row.count),
+											borderColor: '#3080d0',
+											backgroundColor: '#3080d0'}] },
+									options: {legend:{display: false}, scales:{xAxes:[{gridLines:{display: false}}]}}});
+					</script>
 				</div>
 			</div>
 		</div>

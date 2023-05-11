@@ -22,7 +22,7 @@
 				<div class="modal-footer">
 					<div class="mr-auto text-success"><span <g:if test="${!emailSent}">class="d-none"</g:if>>Your username email was sent - check your mail!</span></div>
 					<div class="btn-group">
-						<button type="submit" form="forgotUsernameForm" class="btn btn-primary">Send Email</button>
+						<g:recaptcha form="forgotUsernameForm" value="Send Email"/>
 					</div>
 				</div>
 			</div>

@@ -22,7 +22,7 @@
 								<g:encodeAs codec="PreserveWhitespace"><g:fieldValue bean="${it}" field="contents"/></g:encodeAs>
 								<br>
 								<sec:ifLoggedIn>
-								<g:form controller="terms" action="agree" id="${it.id}" data-success="agree('${it.id}');checkTermsReload();" data-error="displayError(request.status);" class="ajaxForm">
+								<g:form controller="terms" action="agree" id="${it.id}" data-success="agree('${it.id}');checkTermsReload();" class="ajaxForm">
 									<button type="submit" id="button${it.id}" class="btn btn-primary float-right">I Agree</button>
 								</g:form>
 								</sec:ifLoggedIn>
@@ -61,29 +61,6 @@
 						</div>
 						</g:if>
 					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="cdbErrorModal" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Error</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				</div>
-				<div class="modal-body">
-					<p>Something has gone wrong in the attempt to record your agreement to the Open Access data use terms. If you are using a 
-					ConnectomeDB account, we recommend following these steps:</p>
-					<ol>
-						<li>Log out of BALSA</li>
-						<li>Log into your ConnectomeDB account</li>
-						<li>Locate any HCP data set</li>
-						<li>Click on the 'Data Use Terms Required' button</li>
-						<li>Accept the terms</li>
-						<li>Log back into BALSA</li>
-					</ol>
-					<p>We apologize for any inconvenience.</p>
 				</div>
 			</div>
 		</div>
