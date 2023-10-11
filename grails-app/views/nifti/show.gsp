@@ -71,6 +71,30 @@
 					</p>
 					</g:if>
 
+					<g:if test="${file.labelTable}">
+						<span class="attributeLabel">LABEL TABLE:</span><br>
+						<a class="btn btn-light mb-3" data-toggle="collapse" data-target="#label_table_rows">click to show/hide</a>
+						<div id="label_table_rows" class="collapse">
+							<div style="column-count: 3; column-fill: auto; max-height: ${Math.max(15, Math.ceil(file.labelTable.lt.size() / 3)) * 1.4}em">
+								<g:each in="${file.labelTable.lt}">
+									<div class="row">
+										<div class="col-sm-3 text-right text-monospace">${it.index}:</div>
+										<g:if test="${it.alpha}">
+											<div class="col-sm-2 border border-secondary text-center" style="background-color:rgba(${it.red},${it.green},${it.blue},${it.alpha})"></div>
+										</g:if>
+										<g:else>
+											<svg class="col-sm-2 p-0 border border-secondary" style="height:1.4em">
+												<line x1="100%" y1="0" x2="0" y2="100%" style="fill:none; stroke:#6c757d; stroke-width:1px;"></line>
+												<line x1="0" y1="0" x2="100%" y2="100%" style="fill:none; stroke:#6c757d; stroke-width:1px;"></line>
+											</svg>
+										</g:else>
+										<div class="col-7">${it.label}</div>
+									</div>
+								</g:each>
+							</div><br>
+						</div>
+					</g:if>
+
 					<g:render template="/templates/fileInfo" />
 
 					<p>

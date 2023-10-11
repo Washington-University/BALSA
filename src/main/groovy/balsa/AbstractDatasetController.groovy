@@ -755,7 +755,7 @@ abstract class AbstractDatasetController extends AbstractBalsaController {
 		Dataset datasetInstance = Dataset.get(params.id)
 		if (notFound(datasetInstance) || wrongType(datasetInstance)) return
 		
-		render datasetInstance.extract
+		render datasetInstance.extract ?: datasetInstance.id
 	}
 	
 	protected def wrongType(Dataset datasetInstance) {

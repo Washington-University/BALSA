@@ -1,5 +1,5 @@
 <div style="margin: -5px -5px 5px;font-size:0" onload="changeSceneFileVisibility();">
-<g:set var="thumbnailSize" value="${1143/params.columns.toInteger()}" />
+<g:set var="thumbnailSize" value="${1143/(params.columns?.toInteger() ?: 4)}" />
 
 <g:each in="${searchResults.datasets}" var="dataset">
 <g:set var="datasetVersion" value="${dataset.publicVersion() ?: dataset.preprintVersion()}" />

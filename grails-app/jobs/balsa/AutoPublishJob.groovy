@@ -44,8 +44,12 @@ class AutoPublishJob {
 //					if (preview) {
 //						status.setMedia(approvedVersion.id + '.' + preview.imageFormat, new ByteArrayInputStream(preview.image))
 //					}
-					if (Environment.current == Environment.PRODUCTION) {
-						twitter4jService.updateStatus(status)
+					try {
+						if (Environment.current == Environment.PRODUCTION) {
+							twitter4jService.updateStatus(status)
+						}
+					}
+					catch(Exception e) { // Twitter API may be down or inaccessible
 					}
 				}
 			}

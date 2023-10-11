@@ -18,29 +18,29 @@
 						</g:hasErrors>
 					</div>
 					
-					<g:form controller="register" action="register" name="registerForm" autocomplete='off'>
+					<g:form class="needs-validation" controller="register" action="register" name="registerForm" autocomplete='off'>
 						<div class="form-group row">
 							<label class="col-4 col-form-label" for="username">Username</label>
 							<div class="col-8">
-								<input name="username" class="form-control" required="true"/>
+								<input id="username" name="username" class="form-control" required="true"/>
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-4 col-form-label" for="email">Email Address</label>
 							<div class="col-8">
-								<input type="email" name="email" class="form-control" required="true"/>
+								<input id="email" type="email" name="email" class="form-control" required="true"/>
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-4 col-form-label" for="password">Password</label>
 							<div class="col-8">
-								<input type="password" name="password" class="form-control" required="true"/>
+								<input id="password" type="password" name="password" class="form-control" required="true" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&])[A-Za-z\d!@#$%^&]{8,}$" onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Must have at least eight characters, must contain at least one letter, one number, and one special character (!@#$%^&).' : ''); if(this.checkValidity()) form.password2.pattern = this.value;"/>
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-4 col-form-label" for="password2">Password (again)</label>
 							<div class="col-8">
-								<input type="password" name="password2" class="form-control" required="true"/>
+								<input id="password2" type="password" name="password2" class="form-control" required="true"/>
 							</div>
 						</div>
 						<div class="text-secondary">Passwords requirements: at least eight characters, must contain at least one letter, one number, and one special character (!@#$%^&).</div>
@@ -53,5 +53,16 @@
 				</div>
 			</div>
 		</div>
+		<script>
+			$('#registerForm').on('submit', function(event) {
+				let form = document.getElementById('registerForm');
+				if (form.checkValidity() === false) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+				form.classList.add('was-validated');
+				grecaptcha.reset();
+			});
+		</script>
 	</body>
 </html>

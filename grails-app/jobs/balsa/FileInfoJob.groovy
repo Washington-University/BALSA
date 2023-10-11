@@ -19,7 +19,6 @@ class FileInfoJob {
     def execute() {
         stagingArea = grailsApplication.config.staging.location
         bin = grailsApplication.config.staging.bin
-        println('triggered\n')
         def testCommand = stagingArea + bin + 'wb_command'
         if (testCommand.execute().text.startsWith('Version')) {
             def initialTime = new Date().getTime()

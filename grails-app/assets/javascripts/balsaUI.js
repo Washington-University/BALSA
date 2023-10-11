@@ -123,7 +123,14 @@ window.onload = function() {
 	$('.accordion .card:first-child .card-body').addClass('show');
 	
 	$('#sceneFileSort').sortable({update: function(event, ui) {updateSceneFileOrder();} });
-	
+
+	$('.rlistcaret').each(function() {
+		$(this).click(function() {
+			$(this).siblings('.rlist').toggleClass('active');
+			$(this).toggleClass('rlistcaret-down')
+		});
+	});
+
 	updateRecentActivity();
 };
 
@@ -735,6 +742,19 @@ function uploadFile() {
 	xhr.setRequestHeader("X-File-Size", (file.size) ? file.size : file.fileSize);
 	xhr.upload.addEventListener("progress", function(event) { $('#uploadProgressBar').width((event.loaded / event.total) * 100 + '%'); }, false);
 	xhr.upload.addEventListener("load", function(event) { $('#processUploadButton').removeClass('disabled'); $('#processUploadButton').removeClass('btn-secondary'); $('#processUploadButton').addClass('btn-primary'); }, false);
+	xhr.send(file);
+}
+
+
+function uploadMyelinFile() {
+	$('#uploadAccordionButton').click();
+	var file = $('#fileUpload').prop('files')[0];
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/" + $('#fileUpload').data('controller') + '/handleUpload?dirName=' + $('#fileUpload').data('dir') + '&dirPass=' + $('#dirPass').val());
+	xhr.setRequestHeader("X-File-Name", encodeURIComponent((file.name) ? file.name : file.fileName));
+	xhr.setRequestHeader("X-File-Size", (file.size) ? file.size : file.fileSize);
+	xhr.upload.addEventListener("progress", function(event) { $('#uploadProgressBar').width((event.loaded / event.total) * 100 + '%'); }, false);
+	xhr.upload.addEventListener("load", function(event) { setTimeout(() => { location.reload(); }, 500) }, false);
 	xhr.send(file);
 }
 // </editor-fold>

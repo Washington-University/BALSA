@@ -10,7 +10,19 @@ class SearchService {
 		if (!params || !params.rows || !params.columns) {
 			return [datasets:[], totalCount:0]
 		}
-		params.max = Integer.valueOf(params.rows) * Integer.valueOf(params.columns) ?: 6
+		try {
+			Integer.valueOf(params.rows)
+		}
+		catch(Exception e) {
+			params.rows = '3'
+		}
+		try {
+			Integer.valueOf(params.columns)
+		}
+		catch(Exception e) {
+			params.columns = '4'
+		}
+		params.max = Integer.valueOf(params.rows) * Integer.valueOf(params.columns) ?: 12
 		params.offset = params.offset ?: 0
 		def searchTags = extractSearchTags(params)
 		
@@ -116,7 +128,19 @@ class SearchService {
 		if (!params || !params.rows || !params.columns) {
 			return [scenes:[], totalCount:0]
 		}
-		params.max = Integer.valueOf(params.rows) * Integer.valueOf(params.columns) ?: 6
+		try {
+			Integer.valueOf(params.rows)
+		}
+		catch(Exception e) {
+			params.rows = '3'
+		}
+		try {
+			Integer.valueOf(params.columns)
+		}
+		catch(Exception e) {
+			params.columns = '4'
+		}
+		params.max = Integer.valueOf(params.rows) * Integer.valueOf(params.columns) ?: 12
 		params.offset = params.offset ?: 0
 		def searchTags = extractSearchTags(params)
 		

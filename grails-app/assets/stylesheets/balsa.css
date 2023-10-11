@@ -650,3 +650,33 @@ select.btn-mini {
 .tagContainer div {
 	font-size: 14px;
 }
+
+.rlist {
+	list-style-type: none;
+	padding-inline-start: 0;
+}
+
+.rlist ul {
+	display: none;
+	padding-inline-start: 40px;
+}
+
+.rlist.active {
+	display: block;
+}
+
+.rlistcaret {
+	cursor: pointer;
+	user-select: none; /* Prevent text selection */
+}
+
+.rlistcaret::before {
+	content: "\25B6";
+	color: black;
+	display: inline-block;
+	margin-right: 6px;
+}
+
+.rlistcaret-down::before {
+	transform: rotate(90deg);
+}

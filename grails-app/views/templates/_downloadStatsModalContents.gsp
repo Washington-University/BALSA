@@ -67,6 +67,7 @@
 		</table>
 	</div>
 </div>
+<g:if test="${downloadStats.downloadsByMonth}">
 <p>
 	<span class="attributeLabel">Downloads By Month:</span>
 	<canvas id="downloadChart"></canvas>
@@ -83,3 +84,4 @@
 						backgroundColor: '#3080d0'}] },
 				options: {legend:{display: false}, scales:{xAxes:[{gridLines:{display: false}}]}}});
 </script>
+</g:if>

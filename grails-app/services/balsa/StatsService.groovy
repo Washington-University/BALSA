@@ -101,7 +101,10 @@ class StatsService {
 	}
 
 	def downloadsByMonth(int max, Dataset dataset) {
-		def inDataset = dataset ? " where dataset_id = '" + dataset.id + "' and date >= '" + dataset.publicDate.format('yyyy-MM-dd') + "'" : ""
+		if (dataset && !dataset.publicDate) {
+			return null
+		}
+		def inDataset = dataset && dataset.publicDate ? " where dataset_id = '" + dataset.id + "' and date >= '" + dataset.publicDate.format('yyyy-MM-dd') + "'" : ""
 		def sql = new Sql(sessionFactory.currentSession.connection())
 		sql.rows("select to_char(date_trunc('month', date), 'YY-MM') as month, count(id) as count from download" + inDataset + " group by date_trunc('month', date) order by date_trunc('month', date) asc") as JSON
 	}

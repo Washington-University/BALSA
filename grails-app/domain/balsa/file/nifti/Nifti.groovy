@@ -1,5 +1,9 @@
 package balsa.file.nifti
 
+import net.kaleidos.hibernate.usertype.JsonMapType
+
+import javax.xml.stream.XMLInputFactory
+import javax.xml.stream.XMLStreamReader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.zip.GZIPInputStream
@@ -12,20 +16,34 @@ class Nifti extends FileMetadata {
 	String datatype
 	int bitsPerVoxel
 	long voxelOffset
+	Map labelTable
 
 	public Nifti(boolean compressed) {
 		this.compressed = compressed
 	}
 	
     static constraints = {
+		labelTable nullable: true, blank: true
     }
-	
+	static mapping = {
+		labelTable type: JsonMapType
+	}
+
 	def setValuesFromFile(InputStream input) {
-		ByteOrder order = ByteOrder.BIG_ENDIAN
 		if (compressed) {
-			input = new GZIPInputStream(input)
+			input = new BufferedInputStream(new GZIPInputStream(input))
 		}
-		
+		readNiftiHeader(input)
+		if (advanceToBracket(input)) {
+			try{
+				readXML(input)
+			}
+			catch (Exception e) {}
+		}
+	}
+
+	def readNiftiHeader(input) {
+		ByteOrder order = ByteOrder.BIG_ENDIAN
 		int headerLength = ByteBuffer.wrap(readBytes(input, 4)).order(order).getInt()
 		switch (headerLength) {
 			case 1543569408:
@@ -57,7 +75,53 @@ class Nifti extends FileMetadata {
 			voxelOffset = ByteBuffer.wrap(readBytes(input, 8)).order(order).getLong()
 			readBytes(input, 364) // skip to end of header
 		}
-		
+	}
+
+	def advanceToBracket(input) {
+		int i = 0
+		while (i < 5000) {
+			i += 1
+			input.mark(2)
+			def nextByte = input.read()
+			if (nextByte == 60) {
+				input.reset()
+				return true
+			}
+		}
+		return false
+	}
+
+	def readXML(InputStream input) {
+		XMLInputFactory f = XMLInputFactory.newInstance()
+		XMLStreamReader r = f.createXMLStreamReader(input)
+
+		def lt = []
+		while (r.hasNext()) {
+			r.next()
+			if (r.isStartElement() && r.getLocalName() == 'LabelTable') {
+				while (r.hasNext()) {
+					r.next()
+					if (r.isStartElement() && r.getLocalName() == 'Label') {
+						def key = r.getAttributeValue('','Key')
+						def red = Math.round(r.getAttributeValue('','Red').toFloat() * 255)
+						def green = Math.round(r.getAttributeValue('','Green').toFloat() * 255)
+						def blue = Math.round(r.getAttributeValue('','Blue').toFloat() * 255)
+						def alpha = Math.round(r.getAttributeValue('','Alpha').toFloat() * 255)
+						r.next()
+						if (r.hasText()) lt.add([index:key, red:red, green:green, blue:blue, alpha:alpha, label:r.getText()])
+					}
+					if (r.isEndElement() && r.getLocalName() == 'LabelTable') {
+						break
+					}
+				}
+			}
+			if (r.isEndElement() && r.getLocalName() == 'CaretExtension') {
+				break
+			}
+		}
+		if (lt.size() > 0) {
+			labelTable = [lt:lt]
+		}
 	}
 	
 	private byte[] readBytes(InputStream input, int numberToRead) {

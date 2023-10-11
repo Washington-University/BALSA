@@ -30,12 +30,12 @@ class Cifti extends Nifti {
 	
 	def setValuesFromFile(InputStream input) {
 		super.setValuesFromFile(input)
-		
-		advanceToBracket(input)
-		
+	}
+
+	def readXML(InputStream input) {
 		XMLInputFactory f = XMLInputFactory.newInstance()
 		XMLStreamReader r = f.createXMLStreamReader(input)
-		
+
 		while (r.hasNext()) {
 			r.next()
 			if (r.isStartElement() && r.getLocalName() == 'CIFTI') {
@@ -44,7 +44,7 @@ class Cifti extends Nifti {
 			if (r.isEndElement() && r.getLocalName() == 'CIFTI') {
 				break
 			}
-			
+
 			if (r.isStartElement() && r.getLocalName() == 'MD') {
 				def name
 				def value
@@ -75,19 +75,32 @@ class Cifti extends Nifti {
 					}
 				}
 			}
-			
-			if (r.isStartElement() && r.getLocalName() == 'MapName') {
-				r.next()
-				def mapName = r.hasText() ? r.getText() : null
+
+			if (r.isStartElement() && r.getLocalName() == 'NamedMap') {
+				def mapName
 				def labelTable = []
 				while (r.hasNext()) {
 					r.next()
-					if (r.isStartElement() && r.getLocalName() == 'Label') {
+					if (r.isStartElement() && r.getLocalName() == 'MapName') {
 						r.next()
-						if (r.hasText()) labelTable.add(r.getText())
+						mapName = r.hasText() ? r.getText() : 'Labels'
 					}
-					if (r.isEndElement() && r.getLocalName() == 'LabelTable') {
-						break
+					if (r.isStartElement() && r.getLocalName() == 'LabelTable') {
+						while (r.hasNext()) {
+							r.next()
+							if (r.isStartElement() && r.getLocalName() == 'Label') {
+								def key = r.getAttributeValue('','Key')
+								def red = Math.round(r.getAttributeValue('','Red').toFloat() * 255)
+								def green = Math.round(r.getAttributeValue('','Green').toFloat() * 255)
+								def blue = Math.round(r.getAttributeValue('','Blue').toFloat() * 255)
+								def alpha = Math.round(r.getAttributeValue('','Alpha').toFloat() * 255)
+								r.next()
+								if (r.hasText()) labelTable.add([index:key, red:red, green:green, blue:blue, alpha:alpha, label:r.getText()])
+							}
+							if (r.isEndElement() && r.getLocalName() == 'LabelTable') {
+								break
+							}
+						}
 					}
 					if (r.isEndElement() && r.getLocalName() == 'NamedMap') {
 						break
@@ -101,44 +114,15 @@ class Cifti extends Nifti {
 		}
 	}
 	
-	String extractCiftiXml(InputStream input) {
-		String concat = ""
-		while (!(concat.contains('<CIFTI') && concat.contains('</CIFTI>')) && concat.length() < 52428800) { // capping string length at 50 MB in case of wrong file type
-			byte[] b = new byte[20000]
-			input.read(b)
-			concat += new String(b)
-		}
-		if (concat.contains('<CIFTI') && concat.contains('</CIFTI>')) {
-			
-			int beginIndex = concat.indexOf('<CIFTI')
-			int endIndex = concat.indexOf('</CIFTI>', beginIndex) + 8
-			String xml = concat.substring(beginIndex, endIndex)
-
-			xml.replaceAll("[\\000]+", "") // if the chunks read by the input stream don't align properly with the chunks of the stored data, extra null 0x0 characters will be inserted and need to be removed
-			return xml
-		}
-	}
-	
-	def advanceToBracket(input) {
-		while (true) {
-			input.mark(2)
-			def nextByte = input.read()
-			if (nextByte == 60) {
-				input.reset()
-				break
-			}
-		}
-	}
-	
 	def scanForTags() { // should be able to call super.scanForTags, but weird error happens where object considers itself to be its own super object; no idea why or how to fix
 		def returnList = [] as Set
 		returnList.addAll(TagScanner.scan(filepath))
-		for (namedMap in namedMaps) {
-			returnList.addAll(TagScanner.scan(namedMap.key))
-			for (label in namedMap.value) {
-				returnList.addAll(TagScanner.scan(label))
-			}
-		}
+//		for (namedMap in namedMaps) {
+//			returnList.addAll(TagScanner.scan(namedMap.key))
+//			for (label in namedMap.value) {
+//				returnList.addAll(TagScanner.scan(label))
+//			}
+//		}
 		returnList.toArray()
 	}
 }

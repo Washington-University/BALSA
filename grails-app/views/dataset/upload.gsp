@@ -22,7 +22,7 @@
 							<div id="uploadInput" class="collapse show" data-parent="#uploadAccordion">
 								<div class="custom-file">
 									<input type="file" class="custom-file-input" id="fileUpload" onchange="uploadFile()" data-controller="${datasetTerm('item':datasetInstance)}" data-datasetid="${datasetInstance.id}">
-									<label class="custom-file-label" for="customFile">Choose file</label>
+									<label class="custom-file-label" for="fileUpload">Choose file</label>
 								</div>
 							</div>
 							<div id="uploadProgress" class="collapse" data-parent="#uploadAccordion">

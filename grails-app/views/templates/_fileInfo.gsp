@@ -31,19 +31,24 @@
             <tbody>
                 <tr>
                     <g:if test="${file.fileInfo['Maps to Surface']}">
-                        <td>${file.fileInfo['Maps to Surface'].value}</td>
+                        <g:if test="${file.fileInfo['Maps to Surface'].value == 'true'}"><td class="text-success">true</td></g:if>
+                        <g:else><td class="text-danger">false</td></g:else>
                     </g:if>
                     <g:if test="${file.fileInfo['Maps to Volume']}">
-                        <td>${file.fileInfo['Maps to Volume'].value}</td>
+                        <g:if test="${file.fileInfo['Maps to Volume'].value == 'true'}"><td class="text-success">true</td></g:if>
+                        <g:else><td class="text-danger">false</td></g:else>
                     </g:if>
                     <g:if test="${file.fileInfo['Maps with LabelTable']}">
-                        <td>${file.fileInfo['Maps with LabelTable'].value}</td>
+                        <g:if test="${file.fileInfo['Maps with LabelTable'].value == 'true'}"><td class="text-success">true</td></g:if>
+                        <g:else><td class="text-danger">false</td></g:else>
                     </g:if>
                     <g:if test="${file.fileInfo['Maps with Palette']}">
-                        <td>${file.fileInfo['Maps with Palette'].value}</td>
+                        <g:if test="${file.fileInfo['Maps with Palette'].value == 'true'}"><td class="text-success">true</td></g:if>
+                        <g:else><td class="text-danger">false</td></g:else>
                     </g:if>
                     <g:if test="${file.fileInfo['All Map Palettes Equal']}">
-                        <td>${file.fileInfo['All Map Palettes Equal'].value}</td>
+                        <g:if test="${file.fileInfo['All Map Palettes Equal'].value == 'true'}"><td class="text-success">true</td></g:if>
+                        <g:else><td class="text-danger">false</td></g:else>
                     </g:if>
                 </tr>
             </tbody>
